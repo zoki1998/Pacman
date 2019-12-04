@@ -1,5 +1,0 @@
-print("Hello")
-print("test")
-print("kkkkk")
-print("Test2")
-print("probaa")
