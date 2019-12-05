@@ -154,7 +154,7 @@ class Board(QFrame):
             while (self.tiles[self.pp.x * 22 + self.pp.y - 1] != 10 and self.pp.x != 20):
                 if (self.tryMove(self.pp, self.pp.x + 1, self.pp.y) == FALSE):
                     break
-            if(self.pp.x == 20):
+            if(self.pp.x == 20 and self.pp.y == 11):
                 self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
 
         elif key == Qt.Key_Down:
