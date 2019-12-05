@@ -7,18 +7,20 @@ from PyQt5.QtWidgets import QGraphicsItem
 
 class Player(QGraphicsItem):
 
-    def __init__(self, x=5 ,y= 5,
+    def __init__(self, x=1, y=11,
                  colour='green', icon='images/pacman.ico'):
         QGraphicsItem.__init__(self)
         self.colour = colour
-        self.icon = icon
+        self.i = QImage(icon)
+        self.i2 = QImage(icon)
+        self.i3 = QImage('images/pacman2.png')
         self.x = x
         self.y = y;
 
     def paint(self, painter):
         x, y = self.x, self.y
-        target = QRectF(x * 42 + 10, y * 42 + 10, 42, 42)
+        target = QRectF(x * 42 - 28, y * 42 - 28, 42, 42)
         source = QRectF(0, 0, 42, 42)
-        painter.drawImage(target, QImage(self.icon), source)
+        painter.drawImage(target, self.i, source)
 
 
