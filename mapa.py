@@ -1,6 +1,6 @@
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QGraphicsScene
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QTimer
 from PyQt5.QtGui import QPainter, QColor
 import sys
 import player as p
@@ -43,6 +43,15 @@ class Board(QFrame):
         super().__init__(parent)
         self.resize(882, 924)
         self.shape = 10
+
+        self.key = None
+        self.setFocusPolicy(Qt.StrongFocus)
+
+
+        self.timer_interval = 350
+        self.scene = QGraphicsScene()
+        self.scene.addItem(self.pp)
+        self.timer = QTimer(self)
 
         self.tiles = [
             10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1,  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
@@ -105,7 +114,7 @@ class Board(QFrame):
         if self.shape == 2 or self.shape == 4 or self.shape == 7 or self.shape == 12 or self.shape == 13:
             painter.drawLine(x + self.squareHeight()+1,
                          y + self.squareWidth() , x + self.squareHeight(), y )
-        self.pp.paint(painter, self)
+        self.pp.paint(painter)
 
 
 
@@ -115,3 +124,53 @@ class Board(QFrame):
 
     def squareHeight(self):
         return 42
+
+    def timerEvent(self, event):
+
+        super(Board, self).timerEvent(event)
+
+    def keyPressEvent(self, event):
+        """processes key press events"""
+
+        key = event.key()
+
+        if key == Qt.Key_P:
+            self.pause()
+            return
+
+        elif key == Qt.Key_Left:
+            self.tryMove(self.pp, self.pp.x - 1, self.pp.y)
+
+        elif key == Qt.Key_Right:
+            self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
+
+        elif key == Qt.Key_Down:
+            self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
+
+        elif key == Qt.Key_Up:
+            self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
+
+        elif key == Qt.Key_Space:
+            self.dropDown()
+
+        elif key == Qt.Key_D:
+            self.oneLineDown()
+
+        else:
+            super(Board, self).keyPressEvent(event)
+
+    def tryMove(self, newPiece, newX, newY):
+        """tries to move a shape"""
+
+        x = newX
+        y = newY
+
+        if x < 0 or x >= Board.BoardWidth or y < 0 or y >= Board.BoardHeight:
+            return False
+
+        self.pp.x=x
+        self.pp.y=y
+        self.update()
+
+        return True
+
