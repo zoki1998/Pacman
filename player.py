@@ -14,6 +14,9 @@ class Player(QGraphicsItem):
         self.i = QImage(icon)
         self.i2 = QImage(icon)
         self.i3 = QImage('images/pacman2.png')
+
+        self.img = QImage('images/pacman5.png')
+        self.img2 = QImage('images/pacman6.png')
         self.x = x
         self.y = y;
 

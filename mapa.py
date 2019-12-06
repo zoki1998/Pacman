@@ -18,7 +18,6 @@ class Window(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Pacman')
-
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
         self.resize(882, 924)
@@ -45,8 +44,10 @@ class Board(QFrame):
         self.resize(882, 924)
         self.shape = 10
 
+        self.s1 = 1
+
         self.key = 0
-        self.keyold=0
+        self.keyold = 0
         self.setFocusPolicy(Qt.StrongFocus)
 
         self.color1 = 0xFF0000
@@ -87,10 +88,8 @@ class Board(QFrame):
                 self.setshape(self.tiles[x * 22 + y])
                 self.draw(x * 42, y * 42, painter, QColor(0x000000))
 
-
-    def setshape(self,oblik):
+    def setshape(self, oblik):
         self.shape = oblik
-
 
     def draw(self, x, y, painter, color):
         painter.fillRect(x + 1, y + 1, self.squareHeight(),
@@ -116,9 +115,6 @@ class Board(QFrame):
                          y + self.squareWidth() , x + self.squareHeight(), y )
         self.pp.paint(painter)
 
-
-
-
     def squareWidth(self):
         return 42
 
@@ -127,36 +123,53 @@ class Board(QFrame):
 
     def timerEvent(self, event):
         t = QTransform()
-        t.rotate(90)
         if self.key != 0:
             if self.key == 1:
-                self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i3
+                if self.s1 == 1:
+                    self.pp.i = self.pp.i3
+                    self.s1 = 0
+                else:
+                    self.pp.i = self.pp.img2
+                    self.s1 = 1
                 self.tryMove(self.pp, self.pp.x - 1, self.pp.y)
+
             elif self.key == 2:
-                self.pp.i = self.pp.i2
+                if self.s1 == 1:
+                    self.pp.i = self.pp.i2
+                    self.s1 = 0
+                else:
+                    self.pp.i = self.pp.img
+                    self.s1 = 1
+
                 self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
             elif self.key == 3:
                 self.pp.i = self.pp.i2
                 self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i.transformed(t)
+                t.rotate(90)
+
+                if self.s1 == 1:
+                    self.pp.i = self.pp.i.transformed(t)
+                    self.s1 = 0
+                else:
+                    self.pp.i = self.pp.img.transformed(t)
+                    self.s1 = 1
+
                 self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
             elif self.key == 4:
                 self.pp.i = self.pp.i2
                 self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i.transformed(t)
-                self.pp.i = self.pp.i.transformed(t)
-                self.pp.i = self.pp.i.transformed(t)
+                t.rotate(-90)
+                if self.s1 == 1:
+                    self.pp.i = self.pp.i.transformed(t)
+                    self.s1 = 0
+                else:
+                    self.pp.i = self.pp.img.transformed(t)
+                    self.s1 = 1
                 self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
-
-
-
-
 
         super(Board, self).timerEvent(event)
 
     def keyPressEvent(self, event):
-        """processes key press events"""
 
         key = event.key()
         t = QTransform()
@@ -168,58 +181,21 @@ class Board(QFrame):
 
         elif key == Qt.Key_Left:
             if self.keyold != 1:
-                #self.pp.i = self.pp.i2
-                self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i3
                 self.key = 1
-                """while (self.tiles[(self.pp.x - 2) * 22 + self.pp.y - 1] != 10 and self.pp.x != 1):
-                               if (self.tryMove(self.pp, self.pp.x - 1, self.pp.y) == FALSE):
-                                   break"""
-                self.tryMove(self.pp, self.pp.x - 1, self.pp.y)
-
-
-
-
-
-
 
         elif key == Qt.Key_Right:
             self.pp.i = self.pp.i2
-            self.key = 2
             if self.keyold != 2:
-                """while (self.tiles[self.pp.x * 22 + self.pp.y - 1] != 10 and self.pp.x != 20):
-                    if (self.tryMove(self.pp, self.pp.x + 1, self.pp.y) == FALSE):
-                        break
-                if(self.pp.x == 20 and self.pp.y == 11):
-                    self.tryMove(self.pp, self.pp.x + 1, self.pp.y)"""
-                self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
+                self.key = 2
 
         elif key == Qt.Key_Down:
-            self.key = 3
-            if self.keyold !=3:
-                self.pp.i = self.pp.i2
-                self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i.transformed(t)
-                self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
-                """ while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y] != 10):
-                    if (self.tryMove(self.pp, self.pp.x, self.pp.y + 1) == FALSE):
-                        break """
 
+            if self.keyold !=3:
+                self.key = 3
 
         elif key == Qt.Key_Up:
             if self.keyold != 4:
-                self.pp.i = self.pp.i2
                 self.key = 4
-                self.pp.i.convertToFormat(QImage.Format_RGB888)
-                self.pp.i = self.pp.i.transformed(t)
-                self.pp.i = self.pp.i.transformed(t)
-                self.pp.i = self.pp.i.transformed(t)
-                self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
-                """
-                while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y - 2] != 10):
-                    if (self.tryMove(self.pp, self.pp.x, self.pp.y - 1) == FALSE):
-                        break """
-
         else:
             super(Board, self).keyPressEvent(event)
 
