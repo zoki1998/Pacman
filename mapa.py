@@ -22,7 +22,7 @@ class Window(QMainWindow):
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
         self.resize(882, 924)
-
+        self.tboard.timer.start(self.tboard.timer_interval, self.tboard)
         self.center()
         self.show()
 
@@ -45,15 +45,16 @@ class Board(QFrame):
         self.resize(882, 924)
         self.shape = 10
 
-        self.key = None
+        self.key = 0
+        self.keyold=0
         self.setFocusPolicy(Qt.StrongFocus)
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 350
+        self.timer_interval = 500
         self.scene = QGraphicsScene()
         self.scene.addItem(self.pp)
-        self.timer = QTimer(self)
+        self.timer = QBasicTimer()
         self.tiles = [
             10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1,  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
             10, 3,  12, 12, 9,  12, 5,  10, 10, 10, 1,  10, 10, 10, 3,  12, 5,  10, 3,  12, 5, 10,
@@ -125,6 +126,32 @@ class Board(QFrame):
         return 42
 
     def timerEvent(self, event):
+        t = QTransform()
+        t.rotate(90)
+        if self.key != 0:
+            if self.key == 1:
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i3
+                self.tryMove(self.pp, self.pp.x - 1, self.pp.y)
+            elif self.key == 2:
+                self.pp.i = self.pp.i2
+                self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
+            elif self.key == 3:
+                self.pp.i = self.pp.i2
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i.transformed(t)
+                self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
+            elif self.key == 4:
+                self.pp.i = self.pp.i2
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i.transformed(t)
+                self.pp.i = self.pp.i.transformed(t)
+                self.pp.i = self.pp.i.transformed(t)
+                self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
+
+
+
+
 
         super(Board, self).timerEvent(event)
 
@@ -140,49 +167,58 @@ class Board(QFrame):
             return
 
         elif key == Qt.Key_Left:
-            #self.pp.i = self.pp.i2
-            self.pp.i.convertToFormat(QImage.Format_RGB888)
-            self.pp.i = self.pp.i3
-            self.key = 1
-            """while (self.tiles[(self.pp.x - 2) * 22 + self.pp.y - 1] != 10 and self.pp.x != 1):
-                if (self.tryMove(self.pp, self.pp.x - 1, self.pp.y) == FALSE):
-                    break"""
-            self.tryMove(self.pp, self.pp.x-1, self.pp.y )
+            if self.keyold != 1:
+                #self.pp.i = self.pp.i2
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i3
+                self.key = 1
+                """while (self.tiles[(self.pp.x - 2) * 22 + self.pp.y - 1] != 10 and self.pp.x != 1):
+                               if (self.tryMove(self.pp, self.pp.x - 1, self.pp.y) == FALSE):
+                                   break"""
+                self.tryMove(self.pp, self.pp.x - 1, self.pp.y)
+
+
+
+
+
 
 
         elif key == Qt.Key_Right:
             self.pp.i = self.pp.i2
             self.key = 2
-            """while (self.tiles[self.pp.x * 22 + self.pp.y - 1] != 10 and self.pp.x != 20):
-                if (self.tryMove(self.pp, self.pp.x + 1, self.pp.y) == FALSE):
-                    break
-            if(self.pp.x == 20 and self.pp.y == 11):
-                self.tryMove(self.pp, self.pp.x + 1, self.pp.y)"""
-            self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
+            if self.keyold != 2:
+                """while (self.tiles[self.pp.x * 22 + self.pp.y - 1] != 10 and self.pp.x != 20):
+                    if (self.tryMove(self.pp, self.pp.x + 1, self.pp.y) == FALSE):
+                        break
+                if(self.pp.x == 20 and self.pp.y == 11):
+                    self.tryMove(self.pp, self.pp.x + 1, self.pp.y)"""
+                self.tryMove(self.pp, self.pp.x + 1, self.pp.y)
 
         elif key == Qt.Key_Down:
             self.key = 3
-            self.pp.i = self.pp.i2
-            self.pp.i.convertToFormat(QImage.Format_RGB888)
-            self.pp.i = self.pp.i.transformed(t)
-            self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
-            """ while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y] != 10):
-                if (self.tryMove(self.pp, self.pp.x, self.pp.y + 1) == FALSE):
-                    break """
+            if self.keyold !=3:
+                self.pp.i = self.pp.i2
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i.transformed(t)
+                self.tryMove(self.pp, self.pp.x, self.pp.y + 1)
+                """ while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y] != 10):
+                    if (self.tryMove(self.pp, self.pp.x, self.pp.y + 1) == FALSE):
+                        break """
 
 
         elif key == Qt.Key_Up:
-            self.pp.i = self.pp.i2
-            self.key = 4
-            self.pp.i.convertToFormat(QImage.Format_RGB888)
-            self.pp.i = self.pp.i.transformed(t)
-            self.pp.i = self.pp.i.transformed(t)
-            self.pp.i = self.pp.i.transformed(t)
-            self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
-            """
-            while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y - 2] != 10):
-                if (self.tryMove(self.pp, self.pp.x, self.pp.y - 1) == FALSE):
-                    break """
+            if self.keyold != 4:
+                self.pp.i = self.pp.i2
+                self.key = 4
+                self.pp.i.convertToFormat(QImage.Format_RGB888)
+                self.pp.i = self.pp.i.transformed(t)
+                self.pp.i = self.pp.i.transformed(t)
+                self.pp.i = self.pp.i.transformed(t)
+                self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
+                """
+                while (self.tiles[(self.pp.x - 1) * 22 + self.pp.y - 2] != 10):
+                    if (self.tryMove(self.pp, self.pp.x, self.pp.y - 1) == FALSE):
+                        break """
 
         else:
             super(Board, self).keyPressEvent(event)
@@ -196,6 +232,7 @@ class Board(QFrame):
             if x == -1 and y == 10 and self.key == 1:
                 x = 20
                 y = 10
+                self.keyold = self.key
                 self.pp.x = x
                 self.pp.y = y
                 self.update()
@@ -203,16 +240,19 @@ class Board(QFrame):
             elif x == 21 and y == 10 and self.key == 2:
                 x = 0
                 y = 10
+                self.keyold = self.key
                 self.pp.x = x
                 self.pp.y = y
                 self.update()
                 return True
             else:
+                 self.key = 0
                  return False
         if self.tiles[x*22+y] == 10:
+            self.key = self.keyold
             return False
 
-
+        self.keyold = self.key
         self.pp.x = x
         self.pp.y = y
         self.update()
