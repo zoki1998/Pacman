@@ -1,6 +1,6 @@
 from PyQt5 import QtGui, QtTest
 from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QGraphicsScene
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QTimer
+from PyQt5.QtCore import Qt, QBasicTimer
 from PyQt5.QtGui import QPainter, QColor, QTransform, QImage
 import sys, time
 import dots as dot
@@ -44,8 +44,8 @@ class Board(QFrame):
         super().__init__(parent)
         self.resize(882, 924)
         self.shape = 10
-        self.tackeee = dot.Tacke()
-        self.s1 = 1
+        self.dots = dot.Tacke()
+        self.s1 = 1 # za mijenjanje slike
 
         self.key = 0
         self.keyold = 0
@@ -88,7 +88,7 @@ class Board(QFrame):
             for y in range(22):
                 self.setshape(self.tiles[x * 22 + y])
                 self.draw(x * 42, y * 42, painter, QColor(0x000000))
-                self.tackeee.paint(painter, x, y)
+                self.dots.paint(painter, x, y)
 
     def setshape(self, oblik):
         self.shape = oblik
@@ -114,7 +114,7 @@ class Board(QFrame):
         #donja
         if self.shape == 2 or self.shape == 4 or self.shape == 7 or self.shape == 12 or self.shape == 13:
             painter.drawLine(x + self.squareHeight()+1,
-                         y + self.squareWidth() , x + self.squareHeight(), y )
+                         y + self.squareWidth(), x + self.squareHeight(), y)
         self.pp.paint(painter)
 
     def squareWidth(self):
@@ -213,6 +213,9 @@ class Board(QFrame):
                 self.keyold = self.key
                 self.pp.x = x
                 self.pp.y = y
+                if self.dots.tacka_pom[x*22 + y] != 0:
+                    self.dots.tacka_pom[x*22 + y] = 0
+                    self.dots.tacka = self.dots.tacka_pom
                 self.update()
                 return True
             elif x == 21 and y == 10 and self.key == 2:
@@ -221,18 +224,24 @@ class Board(QFrame):
                 self.keyold = self.key
                 self.pp.x = x
                 self.pp.y = y
+                if self.dots.tacka_pom[x*22 + y] != 0:
+                    self.dots.tacka_pom[x*22 + y] = 0
+                    self.dots.tacka = self.dots.tacka_pom
                 self.update()
                 return True
             else:
                  self.key = 0
                  return False
-        if self.tiles[x*22+y] == 10:
+        if self.tiles[x * 22 + y] == 10:
             self.key = self.keyold
             return False
 
         self.keyold = self.key
         self.pp.x = x
         self.pp.y = y
+        if self.dots.tacka_pom[x*22 + y] != 0:
+            self.dots.tacka_pom[x*22 + y] = 0
+            self.dots.tacka = self.dots.tacka_pom
         self.update()
 
         return True

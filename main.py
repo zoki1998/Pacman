@@ -5,5 +5,5 @@ import player as p
 if __name__ == '__main__':
     app = bi.QApplication([])
     window = m.Window()
-    pl = p.Player()
+    player = p.Player()
     bi.sys.exit(app.exec_())
