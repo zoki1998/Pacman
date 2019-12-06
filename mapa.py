@@ -182,21 +182,19 @@ class Board(QFrame):
             return
 
         elif key == Qt.Key_Left:
-            if self.keyold != 1:
+            if self.keyold != 1 and self.tiles[(self.pp.x-1)*22+self.pp.y] != 10:
                 self.key = 1
 
         elif key == Qt.Key_Right:
-            self.pp.i = self.pp.i2
-            if self.keyold != 2:
+            if self.keyold != 2 and self.tiles[(self.pp.x+1)*22+self.pp.y] != 10:
                 self.key = 2
 
         elif key == Qt.Key_Down:
-
-            if self.keyold !=3:
+            if self.keyold != 3 and self.tiles[self.pp.x*22+1+self.pp.y] != 10:
                 self.key = 3
 
         elif key == Qt.Key_Up:
-            if self.keyold != 4:
+            if self.keyold != 4 and self.tiles[self.pp.x*22-1+self.pp.y] != 10:
                 self.key = 4
         else:
             super(Board, self).keyPressEvent(event)
