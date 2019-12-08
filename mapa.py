@@ -1,5 +1,5 @@
-from PyQt5 import QtGui, QtTest
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QGraphicsScene
+from PyQt5 import QtGui, QtTest, QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QGraphicsScene,QLabel
 from PyQt5.QtCore import Qt, QBasicTimer
 from PyQt5.QtGui import QPainter, QColor, QTransform, QImage
 import sys, time
@@ -21,7 +21,7 @@ class Window(QMainWindow):
         self.setWindowTitle('Pacman')
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
-        self.resize(882, 924)
+        self.resize(882, 954)
         self.tboard.timer.start(self.tboard.timer_interval, self.tboard)
         self.center()
         self.show()
@@ -46,7 +46,11 @@ class Board(QFrame):
         self.shape = 10
         self.dots = dot.Tacke()
         self.s1 = 1 # za mijenjanje slike
+        text = "Poeni: 0    Zivot : 3"
+        self.lbl3 = QLabel(text,self)
+        self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
 
+        self.lbl3.move(10, 930)
         self.key = 0
         self.keyold = 0
         self.setFocusPolicy(Qt.StrongFocus)
@@ -168,7 +172,9 @@ class Board(QFrame):
                     self.pp.i = self.pp.img.transformed(t)
                     self.s1 = 1
                 self.tryMove(self.pp, self.pp.x, self.pp.y - 1)
-
+        text = "Poeni: "+(str(self.pp.poeni))+" Zivot: "+(str(self.pp.zivot))
+        self.lbl3.setText(text)
+        self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
         super(Board, self).timerEvent(event)
 
     def keyPressEvent(self, event):
@@ -212,6 +218,10 @@ class Board(QFrame):
                 self.pp.x = x
                 self.pp.y = y
                 if self.dots.tacka_pom[x*22 + y] != 0:
+                    if self.dots.tacka_pom[x * 22 + y] == 1:
+                        self.pp.poeni = self.pp.poeni + 1
+                    else:
+                        self.pp.poeni = self.pp.poeni + 2
                     self.dots.tacka_pom[x*22 + y] = 0
                     self.dots.tacka = self.dots.tacka_pom
                 self.update()
@@ -223,7 +233,12 @@ class Board(QFrame):
                 self.pp.x = x
                 self.pp.y = y
                 if self.dots.tacka_pom[x*22 + y] != 0:
+                    if self.dots.tacka_pom[x * 22 + y] == 1:
+                        self.pp.poeni = self.pp.poeni + 1
+                    else:
+                        self.pp.poeni = self.pp.poeni + 2
                     self.dots.tacka_pom[x*22 + y] = 0
+
                     self.dots.tacka = self.dots.tacka_pom
                 self.update()
                 return True
@@ -238,9 +253,24 @@ class Board(QFrame):
         self.pp.x = x
         self.pp.y = y
         if self.dots.tacka_pom[x*22 + y] != 0:
+            if self.dots.tacka_pom[x * 22 + y] == 1:
+                self.pp.poeni = self.pp.poeni + 1
+            else:
+                self.pp.poeni = self.pp.poeni + 2
             self.dots.tacka_pom[x*22 + y] = 0
+
             self.dots.tacka = self.dots.tacka_pom
         self.update()
-
         return True
 
+
+'''class Statistic(QtWidgets):
+    
+    def __init__(self, pp):
+        super.__init__()
+        self.fun()
+        self.pp = pp
+        text = "Poeni: {0}".format(self.pp.poeni)
+        self.lbl3 = QLabel(text, self)
+        self.lbl3.move(0, 970)
+    def fun(self):'''
