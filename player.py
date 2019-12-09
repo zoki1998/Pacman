@@ -9,7 +9,7 @@ class Player(QGraphicsItem):
                  colour='green', icon='images/pacman.ico'):
         QGraphicsItem.__init__(self)
         self.colour = colour
-
+        self.pocetak = 0
         self.i = QImage(icon)
         self.i2 = QImage(icon)
         self.i3 = QImage('images/pacman2.png')
@@ -25,5 +25,17 @@ class Player(QGraphicsItem):
         target = QRectF(x * 42 + 10, y * 42 + 10, 42, 42)
         source = QRectF(0, 0, 42, 42)
         painter.drawImage(target, self.i, source)
+
+def zivot(player):
+
+    player.zivot = player.zivot - 1;
+
+    if player.zivot >= 0:
+        player.x = 0
+        player.y = 10
+        player.pocetak = 1
+        player.i = QImage('images/pacman.ico')
+    #else-gameover
+
 
 
