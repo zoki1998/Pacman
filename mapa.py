@@ -55,7 +55,7 @@ class Board(QFrame):
         self.ghost2 = g.Ghost(9,10)
         self.ghost3 = g.Ghost(11,10)
         self.ghost4 = g.Ghost(12,10)
-
+        self.tt=0;
         self.broj = 0
         super().__init__(parent)
         self.resize(882, 924)
@@ -196,8 +196,11 @@ class Board(QFrame):
                         self.s1 = 1
                     self.tryMove(self.pp.x, self.pp.y - 1)
         if (self.brojac % (10 - self.broj)) == 0:
-            for i in range(4):
-                self.tryMove1(i)
+            if self.tt<=4:
+                self.PokrenutiNaPocetku()
+            else:
+                for i in range(4):
+                    self.tryMove1(i)
         text = "Poeni: "+(str(self.pp.poeni))+" Zivot: "+(str(self.pp.zivot))
         self.lbl3.setText(text)
         self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
@@ -306,7 +309,36 @@ class Board(QFrame):
             self.pp.pocetak = 0
         self.update()
 
+    def PokrenutiNaPocetku(self):
+        if self.tt == 0:
+            self.ghost1.x=self.ghost1.x+1
+            self.ghost2.x=self.ghost2.x+1
+        elif self.tt== 1:
+            self.ghost1.x = self.ghost1.x + 1
+            self.ghost2.y = self.ghost2.y - 1
+            self.ghost2.way=1
+        elif self.tt==2:
 
+            g.move(self.tiles, self.ghost2, self.pp)
+            self.ghost1.y=self.ghost1.y - 1
+            self.ghost1.way = 1
+            self.ghost3.x=self.ghost3.x-1
+            self.ghost3.way=1
+            self.ghost4.x=self.ghost4.x-1
+            self.ghost4.way=1
+        elif self.tt==3:
+            g.move(self.tiles,self.ghost1,self.pp)
+            g.move(self.tiles,self.ghost2,self.pp)
+            self.ghost3.y = self.ghost3.y - 1
+            self.ghost4.x = self.ghost4.x - 1
+        elif self.tt==4:
+            g.move(self.tiles, self.ghost1, self.pp)
+            g.move(self.tiles, self.ghost2, self.pp)
+            g.move(self.tiles, self.ghost3, self.pp)
+            self.ghost4.y = self.ghost4.y - 1
+
+        self.tt=self.tt+1
+        self.update()
 
 
 
