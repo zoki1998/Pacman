@@ -8,6 +8,9 @@ class Player(QGraphicsItem):
     def __init__(self, x = 0, y = 10,
                  colour='green', icon='images/pacman.ico'):
         QGraphicsItem.__init__(self)
+        self.id = 1
+        self.key =0
+        self.oldkey = 0
         self.colour = colour
         self.pocetak = 0
         self.i = QImage(icon)
@@ -18,7 +21,7 @@ class Player(QGraphicsItem):
         self.poeni = 0
         self.zivot=3
         self.x = x
-        self.y = y;
+        self.y = y
 
     def paint(self, painter):
         x, y = self.x, self.y

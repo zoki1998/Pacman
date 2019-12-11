@@ -18,7 +18,7 @@ class Window(QMainWindow):
         super().__init__()
 
         self.tboard = Board(self)
-        self.statusbar = self.statusBar()
+        #self.statusbar = self.statusBar()
 
         self.initUI( )
 
@@ -51,6 +51,8 @@ class Board(QFrame):
         msg2Statusbar = pyqtSignal(str)
 
         self.pp = p.Player()
+        self.pp2 = p.Player(20,10)
+        self.pp2.id = 2
         self.ghost1 = g.Ghost(8,10)
         self.ghost2 = g.Ghost(9,10)
         self.ghost3 = g.Ghost(11,10)
@@ -67,8 +69,8 @@ class Board(QFrame):
         self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
         self.brojac=0
         self.lbl3.move(10, 930)
-        self.key = 0
-        self.keyold = 0
+        self.pp.key = 0
+        self.pp.oldkey = 0
         self.setFocusPolicy(Qt.StrongFocus)
 
         self.color1 = 0xFF0000
@@ -110,6 +112,8 @@ class Board(QFrame):
                 self.setshape(self.tiles[x * 22 + y])
                 self.draw(x * 42, y * 42, painter, QColor(0x000000))
                 self.dots.paint(painter, x, y)
+        self.pp.paint(painter)
+        self.pp2.paint(painter)
 
     def setshape(self, oblik):
         self.shape = oblik
@@ -136,7 +140,7 @@ class Board(QFrame):
         if self.shape == 2 or self.shape == 4 or self.shape == 7 or self.shape == 12 or self.shape == 13:
             painter.drawLine(x + self.squareHeight()+1,
                          y + self.squareWidth(), x + self.squareHeight(), y)
-        self.pp.paint(painter)
+
         self.ghost1.paint(painter)
         self.ghost2.paint(painter)
         self.ghost3.paint(painter)
@@ -151,50 +155,94 @@ class Board(QFrame):
 
     def timerEvent(self, event):
         t = QTransform()
+        t1 = QTransform()
         if(self.brojac%10) == 0:
-            if self.key != 0:
-                if self.key == 1:
+            if self.pp.key != 0:
+                if self.pp.key == 1:
                     if self.s1 == 1:
                         self.pp.i = self.pp.i3
-                        self.s1 = 0
+
                     else:
                         self.pp.i = self.pp.img2
-                        self.s1 = 1
-                    self.tryMove(self.pp.x - 1, self.pp.y)
 
-                elif self.key == 2:
+                    self.tryMove(self.pp.x - 1, self.pp.y,self.pp)
+
+                elif self.pp.key == 2:
                     if self.s1 == 1:
                         self.pp.i = self.pp.i2
-                        self.s1 = 0
                     else:
                         self.pp.i = self.pp.img
-                        self.s1 = 1
 
-                    self.tryMove(self.pp.x + 1, self.pp.y)
-                elif self.key == 3:
+                    self.tryMove(self.pp.x + 1, self.pp.y,self.pp)
+                elif self.pp.key == 3:
                     self.pp.i = self.pp.i2
                     self.pp.i.convertToFormat(QImage.Format_RGB888)
                     t.rotate(90)
 
                     if self.s1 == 1:
                         self.pp.i = self.pp.i.transformed(t)
-                        self.s1 = 0
+
                     else:
                         self.pp.i = self.pp.img.transformed(t)
-                        self.s1 = 1
-
-                    self.tryMove(self.pp.x, self.pp.y + 1)
-                elif self.key == 4:
+                    self.tryMove(self.pp.x, self.pp.y + 1,self.pp)
+                elif self.pp.key == 4:
                     self.pp.i = self.pp.i2
                     self.pp.i.convertToFormat(QImage.Format_RGB888)
                     t.rotate(-90)
                     if self.s1 == 1:
                         self.pp.i = self.pp.i.transformed(t)
-                        self.s1 = 0
+
                     else:
                         self.pp.i = self.pp.img.transformed(t)
-                        self.s1 = 1
-                    self.tryMove(self.pp.x, self.pp.y - 1)
+
+                    self.tryMove(self.pp.x, self.pp.y - 1,self.pp)
+            if self.pp2.key != 0:
+                if self.pp2.key == 1:
+                    if self.s1 == 1:
+                        self.pp2.i = self.pp2.i3
+
+                    else:
+                        self.pp2.i = self.pp2.img2
+
+                    self.tryMove(self.pp2.x - 1, self.pp2.y,self.pp2)
+
+                elif self.pp2.key == 2:
+                    if self.s1 == 1:
+                        self.pp2.i = self.pp2.i2
+
+                    else:
+                        self.pp2.i = self.pp2.img
+
+
+                    self.tryMove(self.pp2.x + 1, self.pp2.y,self.pp2)
+                elif self.pp2.key == 3:
+                    self.pp2.i = self.pp2.i2
+                    self.pp2.i.convertToFormat(QImage.Format_RGB888)
+                    t1.rotate(90)
+
+                    if self.s1 == 1:
+                        self.pp2.i = self.pp2.i.transformed(t1)
+
+                    else:
+                        self.pp2.i = self.pp2.img.transformed(t1)
+
+
+                    self.tryMove(self.pp2.x, self.pp2.y + 1,self.pp2)
+                elif self.pp2.key == 4:
+                    self.pp2.i = self.pp2.i2
+                    self.pp2.i.convertToFormat(QImage.Format_RGB888)
+                    t1.rotate(-90)
+                    if self.s1 == 1:
+                        self.pp2.i = self.pp2.i.transformed(t1)
+
+                    else:
+                        self.pp2.i = self.pp2.img.transformed(t1)
+
+                    self.tryMove(self.pp2.x, self.pp2.y - 1,self.pp2)
+            if self.s1 == 1:
+                self.s1 = 0
+            else:
+                self.s1 = 1
         if (self.brojac % (10 - self.broj)) == 0:
             if self.tt<=4:
                 self.PokrenutiNaPocetku()
@@ -218,74 +266,96 @@ class Board(QFrame):
             return
 
         elif key == Qt.Key_Left:
-            if self.keyold != 1 and self.tiles[(self.pp.x-1)*22+self.pp.y] != 10:
-                self.key = 1
+            if self.pp.oldkey != 1 and self.tiles[(self.pp.x-1)*22+self.pp.y] != 10:
+                self.pp.key = 1
 
         elif key == Qt.Key_Right:
-            if self.keyold != 2 and self.tiles[(self.pp.x+1)*22+self.pp.y] != 10:
-                self.key = 2
+            if self.pp.x+1 != 21:
+                if self.pp.oldkey != 2 and self.tiles[(self.pp.x+1)*22+self.pp.y] != 10:
+                    self.pp.key = 2
+            else:
+                if self.pp.oldkey != 2:
+                    self.pp.key = 2
+
 
         elif key == Qt.Key_Down:
-            if self.keyold != 3 and self.tiles[self.pp.x*22+1+self.pp.y] != 10:
-                self.key = 3
+            if self.pp.oldkey != 3 and self.tiles[self.pp.x*22+1+self.pp.y] != 10:
+                self.pp.key = 3
 
         elif key == Qt.Key_Up:
-            if self.keyold != 4 and self.tiles[self.pp.x*22-1+self.pp.y] != 10:
-                self.key = 4
+            if self.pp.oldkey != 4 and self.tiles[self.pp.x*22-1+self.pp.y] != 10:
+                self.pp.key = 4
+        elif key == Qt.Key_A:
+            if self.pp2.oldkey != 1 and self.tiles[(self.pp2.x-1)*22+self.pp2.y] != 10:
+                self.pp2.key = 1
+        elif key == Qt.Key_D:
+            if self.pp2.x+1 != 21:
+                if self.pp2.oldkey != 2 and self.tiles[(self.pp2.x + 1) * 22 + self.pp2.y] != 10:
+                    self.pp2.key = 2
+            else:
+                if self.pp2.oldkey != 2:
+                    self.pp2.key = 2
+
+        elif key == Qt.Key_S:
+            if self.pp2.oldkey != 3 and self.tiles[self.pp2.x * 22 + 1 + self.pp2.y] != 10:
+                self.pp2.key = 3
+        elif key == Qt.Key_W:
+            if self.pp2.oldkey != 4 and self.tiles[self.pp2.x * 22 - 1 + self.pp2.y] != 10:
+                self.pp2.key = 4
         else:
             super(Board, self).keyPressEvent(event)
 
-    def tryMove(self, newX, newY):
+    def tryMove(self, newX, newY,player=p.Player):
 
         x = newX
         y = newY
         if x < 0 or x*42 >= Board.BoardWidth or y < 0 or y*42 >= Board.BoardHeight:
-            if x == -1 and y == 10 and self.key == 1:
+            if x == -1 and y == 10 and player.key == 1:
                 x = 20
                 y = 10
-                self.keyold = self.key
-                self.pp.x = x
-                self.pp.y = y
+                player.oldkey = player.key
+                player.x = x
+                player.y = y
                 if self.dots.tacka_pom[x*22 + y] != 0:
                     if self.dots.tacka_pom[x * 22 + y] == 1:
-                        self.pp.poeni = self.pp.poeni + 1
+                        player.poeni = player.poeni + 1
                     else:
-                        self.pp.poeni = self.pp.poeni + 2
+                        player.poeni = player.poeni + 2
                     #self.dots.tacka_pom[x*22 + y] = 0
                     self.dots.tacka[x*22 + y] = 0
                 self.update()
                 return True
-            elif x == 21 and y == 10 and self.key == 2:
+            elif x == 21 and y == 10 and player.key == 2:
                 x = 0
                 y = 10
-                self.keyold = self.key
-                self.pp.x = x
-                self.pp.y = y
+                player.oldkey = player.key
+                player.x = x
+                player.y = y
                 if self.dots.tacka_pom[x*22 + y] != 0:
                     if self.dots.tacka_pom[x * 22 + y] == 1:
-                        self.pp.poeni = self.pp.poeni + 1
+                        player.poeni = player.poeni + 1
                     else:
-                        self.pp.poeni = self.pp.poeni + 2
+                        player.poeni = player.poeni + 2
                     #self.dots.tacka_pom[x*22 + y] = 0
 
                     self.dots.tacka[x*22 + y] = 0
                 self.update()
                 return True
             else:
-                 self.key = 0
+                 player.key = 0
                  return False
         if self.tiles[x * 22 + y] == 10:
-            self.key = self.keyold
+            player.key = player.oldkey
             return False
 
-        self.keyold = self.key
-        self.pp.x = x
-        self.pp.y = y
+        player.oldkey = player.key
+        player.x = x
+        player.y = y
         if self.dots.tacka_pom[x*22 + y] != 0:
             if self.dots.tacka_pom[x * 22 + y] == 1:
-                self.pp.poeni = self.pp.poeni + 1
+                player.poeni = player.poeni + 1
             else:
-                self.pp.poeni = self.pp.poeni + 2
+                player.poeni = player.poeni + 2
             # self.dots.tacka_pom[x*22 + y] = 0
             self.dots.tacka[x * 22 + y] = 0
 
@@ -304,8 +374,8 @@ class Board(QFrame):
         else:
             g.move(self.tiles, self.ghost4, self.pp)
         if self.pp.pocetak == 1:
-            self.key = 5
-            self.keyold = 5
+            self.pp.key = 5
+            self.pp.oldkey = 5
             self.pp.pocetak = 0
         self.update()
 

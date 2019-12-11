@@ -6,5 +6,5 @@ from tkinter import *
 if __name__ == '__main__':
     app = bi.QApplication([])
     window = m.Window()
-    player = p.Player()
+    #player = p.Player()
     bi.sys.exit(app.exec_())
