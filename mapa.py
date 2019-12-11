@@ -251,8 +251,8 @@ class Board(QFrame):
                         self.pp.poeni = self.pp.poeni + 1
                     else:
                         self.pp.poeni = self.pp.poeni + 2
-                    self.dots.tacka_pom[x*22 + y] = 0
-                    self.dots.tacka = self.dots.tacka_pom
+                    #self.dots.tacka_pom[x*22 + y] = 0
+                    self.dots.tacka[x*22 + y] = 0
                 self.update()
                 return True
             elif x == 21 and y == 10 and self.key == 2:
@@ -266,9 +266,9 @@ class Board(QFrame):
                         self.pp.poeni = self.pp.poeni + 1
                     else:
                         self.pp.poeni = self.pp.poeni + 2
-                    self.dots.tacka_pom[x*22 + y] = 0
+                    #self.dots.tacka_pom[x*22 + y] = 0
 
-                    self.dots.tacka = self.dots.tacka_pom
+                    self.dots.tacka[x*22 + y] = 0
                 self.update()
                 return True
             else:
@@ -286,9 +286,9 @@ class Board(QFrame):
                 self.pp.poeni = self.pp.poeni + 1
             else:
                 self.pp.poeni = self.pp.poeni + 2
-            self.dots.tacka_pom[x*22 + y] = 0
+            # self.dots.tacka_pom[x*22 + y] = 0
+            self.dots.tacka[x * 22 + y] = 0
 
-            self.dots.tacka = self.dots.tacka_pom
         self.update()
 
         return True
