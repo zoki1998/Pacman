@@ -5,19 +5,23 @@ from PyQt5.QtWidgets import QGraphicsItem
 
 class Player(QGraphicsItem):
 
-    def __init__(self, x = 0, y = 10,
+    def __init__(self, x=0, y=10,
                  colour='green', icon='images/pacman.ico'):
         QGraphicsItem.__init__(self)
-        self.id = 1
+
         self.key =0
         self.oldkey = 0
-        self.colour = colour
+
         self.pocetak = 0
+
+        self.colour = colour
         self.i = QImage(icon)
         self.i2 = QImage(icon)
         self.i3 = QImage('images/pacman2.png')
         self.img = QImage('images/pacman5.png')
         self.img2 = QImage('images/pacman6.png')
+
+
         self.poeni = 0
         self.zivot=3
         self.x = x
@@ -29,9 +33,8 @@ class Player(QGraphicsItem):
         source = QRectF(0, 0, 42, 42)
         painter.drawImage(target, self.i, source)
 
+
 def zivot(player):
-
-
 
     if player.zivot > 0:
         player.zivot = player.zivot - 1;
@@ -46,7 +49,70 @@ def zivot(player):
 
         player.pocetak = 1
 
-    #else-gameover
 
+def movePlayer(newX, newY, player, dots, tiles):
 
+    x = newX
+    y = newY
+    if x < 0 or x * 42 >= 882 or y < 0 or y * 42 >= 924:
+        if x == -1 and y == 10 and player.key == 1:
+            x = 20
+            y = 10
 
+            player.oldkey = player.key
+            player.x = x
+            player.y = y
+
+            if dots.tacka_pom[x * 22 + y] != 0:
+
+                if dots.tacka_pom[x * 22 + y] == 1:
+                    player.poeni = player.poeni + 10
+                else:
+                    player.poeni = player.poeni + 20
+
+                dots.tacka[x * 22 + y] = 0
+
+            return True
+
+        elif x == 21 and y == 10 and player.key == 2:
+
+            x = 0
+            y = 10
+
+            player.oldkey = player.key
+            player.x = x
+            player.y = y
+
+            if dots.tacka_pom[x * 22 + y] != 0:
+
+                if dots.tacka_pom[x * 22 + y] == 1:
+                    player.poeni = player.poeni + 10
+                else:
+                    player.poeni = player.poeni + 20
+
+                dots.tacka[x * 22 + y] = 0
+
+            return True
+
+        else:
+            player.key = 0
+            return False
+
+    if tiles[x * 22 + y] == 10:
+        player.key = player.oldkey
+        return False
+
+    player.oldkey = player.key
+    player.x = x
+    player.y = y
+
+    if dots.tacka_pom[x * 22 + y] != 0:
+
+        if dots.tacka_pom[x * 22 + y] == 1:
+            player.poeni = player.poeni + 10
+        else:
+            player.poeni = player.poeni + 20
+
+        dots.tacka[x * 22 + y] = 0
+
+    return True

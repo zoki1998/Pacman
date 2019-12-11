@@ -6,7 +6,7 @@ import player as pl
 
 class Ghost(QGraphicsItem):
 
-    def __init__(self, x = 10, y = 10,
+    def __init__(self, x=10, y=10,
                  colour='green', icon='images/ghost.png'):
         QGraphicsItem.__init__(self)
         self.colour = colour
@@ -21,6 +21,7 @@ class Ghost(QGraphicsItem):
         target = QRectF(x * 42+2, y * 42+2, 38, 38)
         source = QRectF(0, 0, 38, 38)
         painter.drawImage(target, self.i, source)
+
 
 def move(tiles, ghost, player,player1):
 
