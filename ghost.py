@@ -22,9 +22,13 @@ class Ghost(QGraphicsItem):
         source = QRectF(0, 0, 38, 38)
         painter.drawImage(target, self.i, source)
 
-def move(tiles, ghost, player):
+def move(tiles, ghost, player,player1):
 
     l = [] #for free positions
+    if ghost.x == player.x and ghost.y == player.y:
+        pl.zivot(player)
+    if ghost.x == player1.x and ghost.y == player1.y:
+        pl.zivot(player1)
     if ghost.x + 1 != 21:
         if tiles[(ghost.x + 1) * 22 + ghost.y] != 10:
             if  ghost.way != 3:
@@ -37,10 +41,9 @@ def move(tiles, ghost, player):
         if ghost.way != 1:
             l.append(2)
     if tiles[ghost.x * 22 - 1 + ghost.y] != 10:
-        if  ghost.way != 2:
+        if ghost.way != 2:
             l.append(1)
-    if ghost.x == player.x and ghost.y == player.y:
-        pl.zivot(player)
+
     if len(l) != 0:
         d = ran.randrange(0, len(l))
         if l[d] == 1:
@@ -59,8 +62,7 @@ def move(tiles, ghost, player):
             if ghost.x == 21:
                 ghost.x = 0
             ghost.y = ghost.y
-        if ghost.x == player.x and ghost.y == player.y:
-            pl.zivot(player)
+
         ghost.way = l[d]
 
     else:
@@ -69,24 +71,26 @@ def move(tiles, ghost, player):
             if ghost.x == 21:
                 ghost.x = 0
             ghost.y = ghost.y
-            if ghost.x == player.x and ghost.y == player.y:
-                pl.zivot(player)
+
         elif ghost.way == 3:
             ghost.x = ghost.x - 1
             if ghost.x == -1:
                 ghost.x = 20
             ghost.y = ghost.y
-            if ghost.x == player.x and ghost.y == player.y:
-                pl.zivot(player)
+
         elif ghost.way == 2:
             ghost.x = ghost.x
             ghost.y = ghost.y + 1
-            if ghost.x == player.x and ghost.y == player.y:
-                pl.zivot(player)
+
         elif ghost.way == 1:
             ghost.x = ghost.x
             ghost.y = ghost.y - 1
-            if ghost.x == player.x and ghost.y == player.y:
-                pl.zivot(player)
+
+    if ghost.x == player.x and ghost.y == player.y:
+        pl.zivot(player)
+    if ghost.x == player1.x and ghost.y == player1.y:
+        pl.zivot(player1)
+
+
 
 

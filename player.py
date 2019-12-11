@@ -31,13 +31,21 @@ class Player(QGraphicsItem):
 
 def zivot(player):
 
-    player.zivot = player.zivot - 1;
 
-    if player.zivot >= 0:
-        player.x = 0
-        player.y = 10
+
+    if player.zivot > 0:
+        player.zivot = player.zivot - 1;
+        if player.id == 1:
+            player.x = 0
+            player.y = 10
+            player.i = QImage('images/pacman.ico')
+        else:
+            player.x = 20
+            player.y = 10
+            player.i = QImage('images/pacman2.png')
+
         player.pocetak = 1
-        player.i = QImage('images/pacman.ico')
+
     #else-gameover
 
 

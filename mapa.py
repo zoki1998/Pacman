@@ -366,17 +366,21 @@ class Board(QFrame):
     def tryMove1(self, z):
 
         if z == 0:
-            g.move(self.tiles, self.ghost1, self.pp)
+            g.move(self.tiles, self.ghost1, self.pp, self.pp2)
         elif z == 1:
-            g.move(self.tiles, self.ghost2, self.pp)
+            g.move(self.tiles, self.ghost2, self.pp, self.pp2)
         elif z == 2:
-            g.move(self.tiles, self.ghost3, self.pp)
+            g.move(self.tiles, self.ghost3, self.pp, self.pp2)
         else:
-            g.move(self.tiles, self.ghost4, self.pp)
+            g.move(self.tiles, self.ghost4, self.pp, self.pp2)
         if self.pp.pocetak == 1:
             self.pp.key = 5
             self.pp.oldkey = 5
             self.pp.pocetak = 0
+        if self.pp2.pocetak == 1:
+            self.pp2.key = 5
+            self.pp2.oldkey = 5
+            self.pp2.pocetak = 0
         self.update()
 
     def PokrenutiNaPocetku(self):
@@ -389,7 +393,7 @@ class Board(QFrame):
             self.ghost2.way=1
         elif self.tt==2:
 
-            g.move(self.tiles, self.ghost2, self.pp)
+            g.move(self.tiles, self.ghost2, self.pp,self.pp2)
             self.ghost1.y=self.ghost1.y - 1
             self.ghost1.way = 1
             self.ghost3.x=self.ghost3.x-1
@@ -397,30 +401,15 @@ class Board(QFrame):
             self.ghost4.x=self.ghost4.x-1
             self.ghost4.way=1
         elif self.tt==3:
-            g.move(self.tiles,self.ghost1,self.pp)
-            g.move(self.tiles,self.ghost2,self.pp)
+            g.move(self.tiles,self.ghost1,self.pp,self.pp2)
+            g.move(self.tiles,self.ghost2,self.pp,self.pp2)
             self.ghost3.y = self.ghost3.y - 1
             self.ghost4.x = self.ghost4.x - 1
         elif self.tt==4:
-            g.move(self.tiles, self.ghost1, self.pp)
-            g.move(self.tiles, self.ghost2, self.pp)
-            g.move(self.tiles, self.ghost3, self.pp)
+            g.move(self.tiles, self.ghost1, self.pp, self.pp2)
+            g.move(self.tiles, self.ghost2, self.pp, self.pp2)
+            g.move(self.tiles, self.ghost3, self.pp, self.pp2)
             self.ghost4.y = self.ghost4.y - 1
 
         self.tt=self.tt+1
         self.update()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
