@@ -18,8 +18,8 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.startGame()
         self.tboard = Board(self)
-
 
         self.showFullScreen()
         #self.showMinimized()
@@ -37,6 +37,18 @@ class Window(QMainWindow):
 
         self.center()
         self.show()
+
+    def startGame(self):
+        msgBox = QMessageBox()
+
+        msgBox.setWindowIcon(QtGui.QIcon('pacman.ico'))
+        msgBox.setWindowTitle("game")
+
+        msgBox.setText('PACMAN \nStart game')
+
+        msgBox.setStandardButtons(QMessageBox.Yes)
+
+        msgBox.exec()
 
     def center(self):
         """centers the window on the screen"""
