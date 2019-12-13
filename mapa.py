@@ -1,9 +1,10 @@
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QGraphicsScene,QLabel
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QGraphicsScene,QLabel, QApplication, QScrollArea
 
 from PyQt5.QtGui import QTransform, QImage
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QGraphicsView, QVBoxLayout, QWidget
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QGraphicsView, QVBoxLayout, QMessageBox
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, pyqtSlot
+
 from PyQt5.QtGui import QPainter, QColor
 import sys, time
 import dots as dot
@@ -19,10 +20,9 @@ class Window(QMainWindow):
 
         self.tboard = Board(self)
 
-        self.isFullScreen()
+
         self.showFullScreen()
-        self.tboard.isMinimized()
-        self.tboard.showMinimized()
+        #self.showMinimized()
         self.initUI( )
 
     def initUI(self):
@@ -54,6 +54,8 @@ class Board(QFrame):
 
     def __init__(self, parent):
 
+        self.pobjednik = 0
+
         self.player1 = p.Player()
         self.player1.id = 1
         self.player2 = p.Player(20,10)
@@ -80,11 +82,16 @@ class Board(QFrame):
 
         self.slika_pom = 1 # za mijenjanje slike
 
-        text = "Poeni: 0    Zivot : 3"
-        self.lbl3 = QLabel(text,self)
-        self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
-        self.lbl3.move(10, 930)
-        self.lbl3.isMaximized()
+        text1 = "Poeni(1): 0    Zivot(1) : 3"
+        self.label1 = QLabel(text1, self)
+        self.label1.setFont(QtGui.QFont('SansSerif', 30))
+        self.label1.move(10, 930)
+
+        text2 = "Poeni(2): 0    Zivot(2) : 3"
+        self.label1 = QLabel(text2, self)
+        self.label1.setFont(QtGui.QFont('SansSerif', 30))
+        self.label1.move(10, 930)
+
         self.brojac = 0 #za timer
 
         self.player1.key = 0
@@ -182,6 +189,8 @@ class Board(QFrame):
         return 42
 
     def timerEvent(self, event):
+
+        self.checkGameOver()
 
         t = QTransform()
         t1 = QTransform()
@@ -294,9 +303,34 @@ class Board(QFrame):
 
     def checkPoints(self):
 
-        text = "Poeni: " + (str(self.player1.poeni)) + " Zivot: " + (str(self.player1.zivot))
-        self.lbl3.setText(text)
-        self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
+        text1 = "Poeni: " + (str(self.player1.poeni)) + " Zivot: " + (str(self.player1.zivot))
+        self.label1.setText(text1)
+        self.label1.setFont(QtGui.QFont('SansSerif', 30))
+
+        text2 = "Poeni: " + (str(self.player2.poeni)) + " Zivot: " + (str(self.player2.zivot))
+        self.label2.setText(text2)
+        self.label2.setFont(QtGui.QFont('SansSerif', 30))
+
+    def checkGameOver(self):
+
+        if self.player1.game_over == True and self.player2.game_over == True:
+
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Information)
+            msgBox.setWindowTitle("PACMAN")
+
+            if self.player1.poeni > self.player2.poeni:
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1!')
+            elif self.player1.poeni < self.player2.poeni:
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2!')
+            else:
+                msgBox.setText('GAME OVER!!! \n EQUAL RESULT!')
+
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            returnValue = msgBox.exec()
+
+            if returnValue == QMessageBox.Ok:
+                self.parent().close()
 
     def keyPressEvent(self, event):
 
