@@ -11,25 +11,39 @@ class Ghost(QGraphicsItem):
         QGraphicsItem.__init__(self)
         self.colour = colour
         self.i = QImage(icon)
+        self.i2 = QImage("images/scaredghost.png")
         self.way = 0
         self.x = x
         self.y = y
+        self.sakriven = False
 
-    def paint(self, painter):
+
+    def paint(self, painter,opcija):
 
         x, y = self.x, self.y
         target = QRectF(x * 42+2, y * 42+2, 38, 38)
         source = QRectF(0, 0, 38, 38)
-        painter.drawImage(target, self.i, source)
+        if opcija == False:
+            painter.drawImage(target, self.i, source)
+        else:
+            painter.drawImage(target, self.i2, source)
 
 
-def move(tiles, ghost, player,player1):
+def move(tiles, ghost, player,player1,opcija):
+
 
     l = [] #for free positions
-    if ghost.x == player.x and ghost.y == player.y:
-        pl.zivot(player)
-    if ghost.x == player1.x and ghost.y == player1.y:
-        pl.zivot(player1)
+    if opcija == False:
+        if ghost.x == player.x and ghost.y == player.y:
+            pl.zivot(player)
+        if ghost.x == player1.x and ghost.y == player1.y:
+            pl.zivot(player1)
+    else:
+        if ghost.x == player.x and ghost.y == player.y:
+            ghost.sakriven = True
+        if ghost.x == player1.x and ghost.y == player1.y:
+            ghost.sakriven = True
+
     if ghost.x + 1 != 21:
         if tiles[(ghost.x + 1) * 22 + ghost.y] != 10:
             if  ghost.way != 3:
@@ -87,11 +101,21 @@ def move(tiles, ghost, player,player1):
             ghost.x = ghost.x
             ghost.y = ghost.y - 1
 
-    if ghost.x == player.x and ghost.y == player.y:
-        pl.zivot(player)
-    if ghost.x == player1.x and ghost.y == player1.y:
-        pl.zivot(player1)
+    if opcija == False:
+        if ghost.x == player.x and ghost.y == player.y:
+            pl.zivot(player)
+        if ghost.x == player1.x and ghost.y == player1.y:
+            pl.zivot(player1)
+    else:
+        if ghost.x == player.x and ghost.y == player.y:
+            ghost.sakriven = True
+        if ghost.x == player1.x and ghost.y == player1.y:
+            ghost.sakriven = True
 
+    if ghost.sakriven == True:
+        ghost.hide()
+        ghost.x = 8
+        ghost.y = 10
 
 
 

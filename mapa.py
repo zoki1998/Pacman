@@ -54,6 +54,7 @@ class Board(QFrame):
         self.player2 = p.Player(20,10)
         self.player2.id = 2
         self.player2.i = self.player2.i3
+        self.opcija = False
 
 
         self.ghost1 = g.Ghost(8,10)
@@ -86,7 +87,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 50
+        self.timer_interval = 25
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -129,6 +130,11 @@ class Board(QFrame):
         self.player1.paint(painter)
         self.player2.paint(painter)
 
+        self.ghost1.paint(painter,self.opcija)
+        self.ghost2.paint(painter,self.opcija)
+        self.ghost3.paint(painter,self.opcija)
+        self.ghost4.paint(painter,self.opcija)
+
     def setshape(self, oblik):
 
         self.shape = oblik
@@ -160,10 +166,7 @@ class Board(QFrame):
             painter.drawLine(x + self.squareHeight()+1,
                          y + self.squareWidth(), x + self.squareHeight(), y)
 
-        self.ghost1.paint(painter)
-        self.ghost2.paint(painter)
-        self.ghost3.paint(painter)
-        self.ghost4.paint(painter)
+
 
     def squareWidth(self):
 
@@ -270,6 +273,7 @@ class Board(QFrame):
                 self.PokrenutiNaPocetku()
             else:
                 for i in range(4):
+
                     self.tryMove1(i)
 
         self.brojac = self.brojac+1
@@ -339,19 +343,19 @@ class Board(QFrame):
 
     def tryMove(self, newX, newY,player=p.Player):
 
-        if p.movePlayer(newX, newY, player, self.dots, self.tiles):
+        if p.movePlayer(newX, newY, player, self.dots, self.tiles,self):
             self.update()
 
     def tryMove1(self, z):
 
         if z == 0:
-            g.move(self.tiles, self.ghost1, self.player1, self.player2)
+            g.move(self.tiles, self.ghost1, self.player1, self.player2,self.opcija)
         elif z == 1:
-            g.move(self.tiles, self.ghost2, self.player1, self.player2)
+            g.move(self.tiles, self.ghost2, self.player1, self.player2,self.opcija)
         elif z == 2:
-            g.move(self.tiles, self.ghost3, self.player1, self.player2)
+            g.move(self.tiles, self.ghost3, self.player1, self.player2,self.opcija)
         else:
-            g.move(self.tiles, self.ghost4, self.player1, self.player2)
+            g.move(self.tiles, self.ghost4, self.player1, self.player2,self.opcija)
 
         if self.player1.pocetak == 1:
             self.player1.key = 5
@@ -375,7 +379,7 @@ class Board(QFrame):
             self.ghost2.way = 1
 
         elif self.tt == 2:
-            g.move(self.tiles, self.ghost2, self.player1,self.player2)
+            g.move(self.tiles, self.ghost2, self.player1,self.player2,self.opcija)
             self.ghost1.y = self.ghost1.y - 1
             self.ghost1.way = 1
             self.ghost3.x = self.ghost3.x - 1
@@ -384,15 +388,15 @@ class Board(QFrame):
             self.ghost4.way = 1
 
         elif self.tt == 3:
-            g.move(self.tiles,self.ghost1,self.player1,self.player2)
-            g.move(self.tiles,self.ghost2,self.player1,self.player2)
+            g.move(self.tiles,self.ghost1,self.player1,self.player2,self.opcija)
+            g.move(self.tiles,self.ghost2,self.player1,self.player2,self.opcija)
             self.ghost3.y = self.ghost3.y - 1
             self.ghost4.x = self.ghost4.x - 1
 
         elif self.tt == 4:
-            g.move(self.tiles, self.ghost1, self.player1, self.player2)
-            g.move(self.tiles, self.ghost2, self.player1, self.player2)
-            g.move(self.tiles, self.ghost3, self.player1, self.player2)
+            g.move(self.tiles, self.ghost1, self.player1, self.player2,self.opcija)
+            g.move(self.tiles, self.ghost2, self.player1, self.player2,self.opcija)
+            g.move(self.tiles, self.ghost3, self.player1, self.player2,self.opcija)
             self.ghost4.y = self.ghost4.y - 1
 
         self.tt = self.tt + 1

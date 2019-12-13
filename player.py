@@ -50,7 +50,7 @@ def zivot(player):
         player.pocetak = 1
 
 
-def movePlayer(newX, newY, player, dots, tiles):
+def movePlayer(newX, newY, player, dots, tiles,board):
 
     x = newX
     y = newY
@@ -69,6 +69,7 @@ def movePlayer(newX, newY, player, dots, tiles):
                     player.poeni = player.poeni + 10
                 else:
                     player.poeni = player.poeni + 20
+                    board.opcija = True
 
                 dots.tacka[x * 22 + y] = 0
 
@@ -89,6 +90,7 @@ def movePlayer(newX, newY, player, dots, tiles):
                     player.poeni = player.poeni + 10
                 else:
                     player.poeni = player.poeni + 20
+                    board.opcija = True
 
                 dots.tacka[x * 22 + y] = 0
 
@@ -112,6 +114,7 @@ def movePlayer(newX, newY, player, dots, tiles):
             player.poeni = player.poeni + 10
         else:
             player.poeni = player.poeni + 20
+            board.opcija = True
 
         dots.tacka[x * 22 + y] = 0
 
