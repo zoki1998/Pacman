@@ -63,8 +63,9 @@ class Board(QFrame):
         self.ghost4 = g.Ghost(12,10)
 
         self.tt = 0
-        self.broj = 0
+        self.broj = 10
         self.pauza = False
+        self.brojac1 =0
 
         super().__init__(parent)
 
@@ -87,7 +88,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 25
+        self.timer_interval = 20
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -120,7 +121,6 @@ class Board(QFrame):
     def paintEvent(self, event):
 
         painter = QPainter(self)
-        rect = self.contentsRect( )
         for x in range(21):
             for y in range(22):
                 self.setshape(self.tiles[x * 22 + y])
@@ -268,13 +268,20 @@ class Board(QFrame):
             else:
                 self.slika_pom = 1
 
-        if (self.brojac % (10 - self.broj)) == 0:
+        if (self.brojac %  self.broj) == 0:
             if self.tt <= 4:
                 self.PokrenutiNaPocetku()
             else:
                 for i in range(4):
-
                     self.tryMove1(i)
+
+        if self.opcija == True:
+            if self.brojac1 != 200:
+                self.brojac1 = self.brojac1 + 1
+            else:
+                self.brojac1 = 0
+                self.opcija = False
+                self.broj = self.broj - 5
 
         self.brojac = self.brojac+1
 
@@ -308,7 +315,7 @@ class Board(QFrame):
 
 
         elif key == Qt.Key_Down:
-            if self.player1.oldkey != 3 and self.tiles[self.player1.x*22+1+self.player1.y] != 10:
+            if self.player1.oldkey != 3 and self.tiles[self.player1.x*22+1+self.player1.y] != 10 and  (self.player1.x != 10 and self.player1.y != 9) :
                 self.player1.key = 3
 
         elif key == Qt.Key_Up:
@@ -326,7 +333,7 @@ class Board(QFrame):
                     self.player2.key = 2
 
         elif key == Qt.Key_S:
-            if self.player2.oldkey != 3 and self.tiles[self.player2.x * 22 + 1 + self.player2.y] != 10:
+            if self.player2.oldkey != 3 and self.tiles[self.player2.x * 22 + 1 + self.player2.y] != 10 and (self.player2.x != 10 and self.player2.y != 9) :
                 self.player2.key = 3
         elif key == Qt.Key_W:
             if self.player2.oldkey != 4 and self.tiles[self.player2.x * 22 - 1 + self.player2.y] != 10:
@@ -338,6 +345,8 @@ class Board(QFrame):
             else:
                 self.pauza = False
                 self.timer.start(self.timer_interval, self)
+        elif key == Qt.Key_Escape:
+            self.parent().close()
         else:
             super(Board, self).keyPressEvent(event)
 

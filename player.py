@@ -54,6 +54,7 @@ def movePlayer(newX, newY, player, dots, tiles,board):
 
     x = newX
     y = newY
+
     if x < 0 or x * 42 >= 882 or y < 0 or y * 42 >= 924:
         if x == -1 and y == 10 and player.key == 1:
             x = 20
@@ -70,6 +71,7 @@ def movePlayer(newX, newY, player, dots, tiles,board):
                 else:
                     player.poeni = player.poeni + 20
                     board.opcija = True
+                    board.broj = board.broj + 5
 
                 dots.tacka[x * 22 + y] = 0
 
@@ -91,6 +93,7 @@ def movePlayer(newX, newY, player, dots, tiles,board):
                 else:
                     player.poeni = player.poeni + 20
                     board.opcija = True
+                    board.broj = board.broj + 5
 
                 dots.tacka[x * 22 + y] = 0
 
@@ -115,6 +118,7 @@ def movePlayer(newX, newY, player, dots, tiles,board):
         else:
             player.poeni = player.poeni + 20
             board.opcija = True
+            board.broj = board.broj + 5
 
         dots.tacka[x * 22 + y] = 0
 
