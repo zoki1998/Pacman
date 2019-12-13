@@ -58,6 +58,7 @@ class Tacke(QGraphicsItem):
         self.y = y
 
     def paint(self, painter,x,y):
+
         target = QRectF(x * 42 + 10, y * 42 + 10, 25, 25)
         source = QRectF(0, 0, 42, 42)
 

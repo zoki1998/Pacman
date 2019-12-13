@@ -2,7 +2,7 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import QGraphicsScene,QLabel
 
 from PyQt5.QtGui import QTransform, QImage
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QGraphicsView, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor
 import sys, time
@@ -19,13 +19,18 @@ class Window(QMainWindow):
 
         self.tboard = Board(self)
 
+        self.isFullScreen()
+        self.showFullScreen()
+        self.tboard.isMinimized()
+        self.tboard.showMinimized()
         self.initUI( )
 
     def initUI(self):
 
-        self.setWindowTitle('Pacman')
+        self.setWindowTitle('Pacman-press esc to exit')
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
+
         self.resize(882, 954)
 
         self.tboard.timer.start(self.tboard.timer_interval, self.tboard)
@@ -54,7 +59,7 @@ class Board(QFrame):
         self.player2 = p.Player(20,10)
         self.player2.id = 2
         self.player2.i = self.player2.i3
-        self.opcija = False
+        self.opcija = False  #za bonus
 
 
         self.ghost1 = g.Ghost(8,10)
@@ -63,9 +68,9 @@ class Board(QFrame):
         self.ghost4 = g.Ghost(12,10)
 
         self.tt = 0
-        self.broj = 10
-        self.pauza = False
-        self.brojac1 =0
+        self.broj = 10 #za timer
+        self.pauza = False #p
+        self.brojac1 = 0 #za uskoravanje duhova
 
         super().__init__(parent)
 
@@ -79,7 +84,7 @@ class Board(QFrame):
         self.lbl3 = QLabel(text,self)
         self.lbl3.setFont(QtGui.QFont('SansSerif', 30))
         self.lbl3.move(10, 930)
-
+        self.lbl3.isMaximized()
         self.brojac = 0 #za timer
 
         self.player1.key = 0
@@ -283,7 +288,7 @@ class Board(QFrame):
                 self.opcija = False
                 self.broj = self.broj - 5
 
-        self.brojac = self.brojac+1
+        self.brojac = self.brojac + 1
 
         super(Board, self).timerEvent(event)
 
@@ -314,7 +319,7 @@ class Board(QFrame):
                     self.player1.key = 2
 
 
-        elif key == Qt.Key_Down:
+        elif key == Qt.Key_Down: #potrebno je zabraniti ulazak u tunel za duhove
             if self.player1.oldkey != 3 and self.tiles[self.player1.x*22+1+self.player1.y] != 10 and  (self.player1.x != 10 and self.player1.y != 9) :
                 self.player1.key = 3
 
@@ -412,7 +417,9 @@ class Board(QFrame):
         self.update()
 
     def levelUp(self):
+
         promijenjiva = False
+
         zivot1 = 0
         zivot2 = 0
         bodovi1 =0
@@ -422,8 +429,8 @@ class Board(QFrame):
             promijenjiva = True
 
         if promijenjiva == True:
-            mapa= self.dots.tacka_pom.copy()
-            self.dots.tacka=mapa
+            mapa = self.dots.tacka_pom.copy()
+            self.dots.tacka = mapa
             self.tt = 0
             self.ghost1 = g.Ghost(8, 10)
             self.ghost2 = g.Ghost(9, 10)
@@ -443,7 +450,7 @@ class Board(QFrame):
             self.player2.zivot = zivot2
             self.player2.poeni = bodovi2
             self.player2.i = self.player2.i3
-            self.opcija = False
+            self.opcija = False  #bonuuus
             if self.broj - 2 > 0:
                 self.broj = self.broj - 2
             self.brojac = 0

@@ -31,11 +31,10 @@ class Ghost(QGraphicsItem):
 
 
 
-def move(tiles, ghost, player,player1,opcija):
-
+def move(tiles, ghost, player, player1, opcija):
 
     l = [] #for free positions
-    if opcija == False:
+    if opcija == False:  #da li je bonus (onda igrac jede duhove)
         if ghost.x == player.x and ghost.y == player.y:
             pl.zivot(player)
         if ghost.x == player1.x and ghost.y == player1.y:
@@ -45,7 +44,8 @@ def move(tiles, ghost, player,player1,opcija):
             ghost.sakriven = True
         if ghost.x == player1.x and ghost.y == player1.y:
             ghost.sakriven = True
-    if ghost.sakriven==False:
+
+    if ghost.sakriven == False:
         if ghost.x + 1 != 21:
             if tiles[(ghost.x + 1) * 22 + ghost.y] != 10:
                 if  ghost.way != 3:
