@@ -63,6 +63,7 @@ class Board(QFrame):
 
         self.tt = 0
         self.broj = 0
+        self.pauza = False
 
         super().__init__(parent)
 
@@ -287,11 +288,9 @@ class Board(QFrame):
         t = QTransform()
         t.rotate(90)
 
-        if key == Qt.Key_P:
-            self.pause()
-            return
 
-        elif key == Qt.Key_Left:
+
+        if key == Qt.Key_Left:
             if self.player1.oldkey != 1 and self.tiles[(self.player1.x-1)*22+self.player1.y] != 10:
                 self.player1.key = 1
 
@@ -328,6 +327,13 @@ class Board(QFrame):
         elif key == Qt.Key_W:
             if self.player2.oldkey != 4 and self.tiles[self.player2.x * 22 - 1 + self.player2.y] != 10:
                 self.player2.key = 4
+        elif key == Qt.Key_P:
+            if self.pauza == False:
+                self.timer.stop()
+                self.pauza = True
+            else:
+                self.pauza = False
+                self.timer.start(self.timer_interval, self)
         else:
             super(Board, self).keyPressEvent(event)
 
