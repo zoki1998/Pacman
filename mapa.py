@@ -410,3 +410,42 @@ class Board(QFrame):
 
         self.tt = self.tt + 1
         self.update()
+
+    def levelUp(self):
+        promijenjiva = False
+        zivot1 = 0
+        zivot2 = 0
+        bodovi1 =0
+        bodovi2 = 0
+
+        if self.ghost1.sakriven == True and self.ghost2.sakriven == True and self.ghost3.sakriven == True and self.ghost4.sakriven == True:
+            promijenjiva = True
+
+        if promijenjiva == True:
+            mapa= self.dots.tacka_pom.copy()
+            self.dots.tacka=mapa
+            self.tt = 0
+            self.ghost1 = g.Ghost(8, 10)
+            self.ghost2 = g.Ghost(9, 10)
+            self.ghost3 = g.Ghost(11, 10)
+            self.ghost4 = g.Ghost(12, 10)
+            zivot1 = self.player1.zivot
+            zivot2 = self.player2.zivot
+            bodovi1 = self.player1.poeni
+            bodovi2 = self.player2.poeni
+
+            self.player1 = p.Player()
+            self.player1.id = 1
+            self.player1.zivot = zivot1
+            self.player1.poeni = bodovi1
+            self.player2 = p.Player(20, 10)
+            self.player2.id = 2
+            self.player2.zivot = zivot2
+            self.player2.poeni = bodovi2
+            self.player2.i = self.player2.i3
+            self.opcija = False
+            if self.broj - 2 > 0:
+                self.broj = self.broj - 2
+            self.brojac = 0
+            self.brojac1 = 1
+

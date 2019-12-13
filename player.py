@@ -60,21 +60,25 @@ def movePlayer(newX, newY, player, dots, tiles,board):
             x = 20
             y = 10
 
+
+
             player.oldkey = player.key
             player.x = x
             player.y = y
 
-            if dots.tacka_pom[x * 22 + y] != 0:
+            if dots.tacka[x * 22 + y] != 0:
 
-                if dots.tacka_pom[x * 22 + y] == 1:
+                if dots.tacka[x * 22 + y] == 1:
                     player.poeni = player.poeni + 10
                 else:
                     player.poeni = player.poeni + 20
                     board.opcija = True
                     board.broj = board.broj + 5
+                    board.brojac1 = 0
 
                 dots.tacka[x * 22 + y] = 0
 
+            board.levelUp()
             return True
 
         elif x == 21 and y == 10 and player.key == 2:
@@ -86,17 +90,18 @@ def movePlayer(newX, newY, player, dots, tiles,board):
             player.x = x
             player.y = y
 
-            if dots.tacka_pom[x * 22 + y] != 0:
+            if dots.tacka[x * 22 + y] != 0:
 
-                if dots.tacka_pom[x * 22 + y] == 1:
+                if dots.tacka[x * 22 + y] == 1:
                     player.poeni = player.poeni + 10
                 else:
                     player.poeni = player.poeni + 20
                     board.opcija = True
                     board.broj = board.broj + 5
+                    board.brojac1 = 0
 
                 dots.tacka[x * 22 + y] = 0
-
+            board.levelUp()
             return True
 
         else:
@@ -111,14 +116,15 @@ def movePlayer(newX, newY, player, dots, tiles,board):
     player.x = x
     player.y = y
 
-    if dots.tacka_pom[x * 22 + y] != 0:
+    if dots.tacka[x * 22 + y] != 0:
 
-        if dots.tacka_pom[x * 22 + y] == 1:
+        if dots.tacka[x * 22 + y] == 1:
             player.poeni = player.poeni + 10
         else:
             player.poeni = player.poeni + 20
             board.opcija = True
             board.broj = board.broj + 5
+            board.brojac1 = 0
 
         dots.tacka[x * 22 + y] = 0
 
