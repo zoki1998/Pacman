@@ -82,6 +82,9 @@ class Board(QFrame):
         self.ghost4 = g.Ghost(12,10)
 
         self.tt = 0
+
+        self.level = 1
+
         self.broj = 10 #za timer
         self.pauza = False #p
         self.brojac1 = 0 #za uskoravanje duhova
@@ -103,6 +106,11 @@ class Board(QFrame):
         self.label1 = QLabel(text2, self)
         self.label1.setFont(QtGui.QFont('SansSerif', 30))
         self.label1.move(10, 930)
+
+        text3 = "Level: 1"
+        self.label3 = QLabel(text3, self)
+        self.label3.setFont(QtGui.QFont('SansSerif', 30))
+        self.label3.move(10, 930)
 
         self.brojac = 0 #za timer
 
@@ -294,7 +302,7 @@ class Board(QFrame):
             else:
                 self.slika_pom = 1
 
-        if (self.brojac %  self.broj) == 0:
+        if (self.brojac % self.broj) == 0:
             if self.tt <= 4:
                 self.PokrenutiNaPocetku()
             else:
@@ -468,20 +476,28 @@ class Board(QFrame):
 
         zivot1 = 0
         zivot2 = 0
-        bodovi1 =0
+        bodovi1 = 0
         bodovi2 = 0
 
         if self.ghost1.sakriven == True and self.ghost2.sakriven == True and self.ghost3.sakriven == True and self.ghost4.sakriven == True:
             promijenjiva = True
 
         if promijenjiva == True:
+
+            self.level = self.level + 1
+            text3 = "Level: " + (str(self.level))
+            self.label3.setText(text3, self)
+            self.label3.setFont(QtGui.QFont('SansSerif', 30))
+
             mapa = self.dots.tacka_pom.copy()
             self.dots.tacka = mapa
             self.tt = 0
+
             self.ghost1 = g.Ghost(8, 10)
             self.ghost2 = g.Ghost(9, 10)
             self.ghost3 = g.Ghost(11, 10)
             self.ghost4 = g.Ghost(12, 10)
+
             zivot1 = self.player1.zivot
             zivot2 = self.player2.zivot
             bodovi1 = self.player1.poeni
@@ -496,6 +512,7 @@ class Board(QFrame):
             self.player2.zivot = zivot2
             self.player2.poeni = bodovi2
             self.player2.i = self.player2.i3
+
             self.opcija = False  #bonuuus
             if self.broj - 2 > 0:
                 self.broj = self.broj - 2
