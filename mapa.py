@@ -340,9 +340,9 @@ class Board(QFrame):
             msgBox.setWindowTitle("PACMAN")
 
             if self.player1.poeni > self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1!')
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1! \n Broj poena: ' + str(self.player1.poeni))
             elif self.player1.poeni < self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2!')
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2! \n Broj Poena ' + str(self.player2.poeni))
             else:
                 msgBox.setText('GAME OVER!!! \n EQUAL RESULT!')
 
