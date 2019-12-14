@@ -40,7 +40,7 @@ class Window(QMainWindow):
         msgBox = QMessageBox()
 
         msgBox.setWindowIcon(QtGui.QIcon('pacman.ico'))
-        msgBox.setWindowTitle("game")
+        msgBox.setWindowTitle("Pacman")
 
         msgBox.setText('PACMAN \nStart game')
 
