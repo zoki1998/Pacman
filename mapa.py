@@ -21,8 +21,6 @@ class Window(QMainWindow):
         self.startGame()
         self.tboard = Board(self)
 
-        self.showFullScreen()
-        #self.showMinimized()
         self.initUI( )
 
     def initUI(self):
@@ -31,7 +29,7 @@ class Window(QMainWindow):
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
 
-        self.resize(882, 954)
+        self.resize(882, 964)
 
         self.tboard.timer.start(self.tboard.timer_interval, self.tboard)
 
@@ -56,7 +54,7 @@ class Window(QMainWindow):
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
         self.move((screen.width() - size.width()) / 2,
-                  (screen.height() - size.height()) / 2-40)
+                  (screen.height() - size.height()) / 2-45)
 
 
 class Board(QFrame):
@@ -99,18 +97,18 @@ class Board(QFrame):
 
         text1 = "Poeni(1): 0    Zivot(1) : 3"
         self.label1 = QLabel(text1, self)
-        self.label1.setFont(QtGui.QFont('SansSerif', 30))
+        self.label1.setFont(QtGui.QFont('SansSerif', 15))
         self.label1.move(10, 930)
 
         text2 = "Poeni(2): 0    Zivot(2) : 3"
-        self.label1 = QLabel(text2, self)
-        self.label1.setFont(QtGui.QFont('SansSerif', 30))
-        self.label1.move(10, 930)
+        self.label2 = QLabel(text2, self)
+        self.label2.setFont(QtGui.QFont('SansSerif', 15))
+        self.label2.move(600, 930)
 
         text3 = "Level: 1"
         self.label3 = QLabel(text3, self)
-        self.label3.setFont(QtGui.QFont('SansSerif', 30))
-        self.label3.move(10, 930)
+        self.label3.setFont(QtGui.QFont('SansSerif', 15))
+        self.label3.move(400, 930)
 
         self.brojac = 0 #za timer
 
@@ -318,18 +316,18 @@ class Board(QFrame):
                 self.broj = self.broj - 5
 
         self.brojac = self.brojac + 1
-
+        self.checkPoints()
         super(Board, self).timerEvent(event)
 
     def checkPoints(self):
 
         text1 = "Poeni: " + (str(self.player1.poeni)) + " Zivot: " + (str(self.player1.zivot))
         self.label1.setText(text1)
-        self.label1.setFont(QtGui.QFont('SansSerif', 30))
+        self.label1.setFont(QtGui.QFont('SansSerif', 15))
 
         text2 = "Poeni: " + (str(self.player2.poeni)) + " Zivot: " + (str(self.player2.zivot))
         self.label2.setText(text2)
-        self.label2.setFont(QtGui.QFont('SansSerif', 30))
+        self.label2.setFont(QtGui.QFont('SansSerif', 15))
 
     def checkGameOver(self):
 
@@ -340,9 +338,9 @@ class Board(QFrame):
             msgBox.setWindowTitle("PACMAN")
 
             if self.player1.poeni > self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1! \n Broj poena: ' + str(self.player1.poeni))
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1! \n Points: ' + str(self.player1.poeni))
             elif self.player1.poeni < self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2! \n Broj Poena ' + str(self.player2.poeni))
+                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2! \n Points: ' + str(self.player2.poeni))
             else:
                 msgBox.setText('GAME OVER!!! \n EQUAL RESULT!')
 
@@ -486,8 +484,8 @@ class Board(QFrame):
 
             self.level = self.level + 1
             text3 = "Level: " + (str(self.level))
-            self.label3.setText(text3, self)
-            self.label3.setFont(QtGui.QFont('SansSerif', 30))
+            self.label3.setText(text3)
+            self.label3.setFont(QtGui.QFont('SansSerif', 15))
 
             mapa = self.dots.tacka_pom.copy()
             self.dots.tacka = mapa
