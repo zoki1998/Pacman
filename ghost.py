@@ -111,8 +111,10 @@ def move(tiles, ghost, player, player1, opcija):
     else:
         if ghost.x == player.x and ghost.y == player.y:
             ghost.sakriven = True
+            player.poeni=player.poeni+500
         if ghost.x == player1.x and ghost.y == player1.y:
             ghost.sakriven = True
+            player1.poeni=player1.poeni+500
 
     if ghost.sakriven == True:
 

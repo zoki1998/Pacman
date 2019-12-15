@@ -75,7 +75,7 @@ def movePlayer(newX, newY, player, dots, tiles, board):
                     if dots.tacka[x * 22 + y] == 1:
                         player.poeni = player.poeni + 10
                     else:
-                        player.poeni = player.poeni + 20
+                        player.poeni = player.poeni + 200
                         board.opcija = True
                         board.broj = board.broj + 5
                         board.brojac1 = 0
@@ -99,7 +99,7 @@ def movePlayer(newX, newY, player, dots, tiles, board):
                     if dots.tacka[x * 22 + y] == 1:
                         player.poeni = player.poeni + 10
                     else:
-                        player.poeni = player.poeni + 20
+                        player.poeni = player.poeni + 200
                         board.opcija = True
                         board.broj = board.broj + 5
                         board.brojac1 = 0
@@ -125,7 +125,7 @@ def movePlayer(newX, newY, player, dots, tiles, board):
             if dots.tacka[x * 22 + y] == 1:
                 player.poeni = player.poeni + 10
             else:
-                player.poeni = player.poeni + 20
+                player.poeni = player.poeni + 200
                 board.opcija = True  #BONUS --
                 board.broj = board.broj + 5
                 board.brojac1 = 0

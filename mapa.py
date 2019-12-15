@@ -135,7 +135,7 @@ class Board(QFrame):
             10, 1,  10, 10, 1,  10, 1,  10, 1,  10, 10, 10, 1,  10, 1,  10, 1,  10, 1,  10, 1, 10,
             10, 2,  12, 12, 8,  10, 1,  10, 1,  10, 14, 10, 1,  10, 1,  10, 1,  10, 1,  10, 1, 10,
             10, 10, 10, 10, 1,  10, 2,  12, 8,  10, 1,  10, 1,  10, 2,  12, 8,  10, 2,  12, 8, 10,
-            10, 10, 10, 10, 1,  10, 10, 10, 6,  12, 8,  10, 1,  10, 10, 10, 1,  10, 10, 10, 1, 10,
+            10, 10, 10, 10, 1,  10, 10, 10, 6,  20, 8,  10, 1,  10, 10, 10, 1,  10, 10, 10, 1, 10,
             10, 10, 10, 10, 1,  10, 3,  12, 8,  10, 1,  10, 1,  10, 3,  12, 8,  10, 3,  12, 8, 10,
             10, 3,  12, 12, 8,  10, 1,  10, 1,  10, 13, 10, 1,  10, 1,  10, 1,  10, 1,  10, 1, 10,
             10, 1,  10, 10, 1,  10, 1,  10, 1,  10, 10, 10, 1,  10, 1,  10, 1,  10, 1,  10, 1, 10,
@@ -176,7 +176,7 @@ class Board(QFrame):
 
         painter.setPen(QColor(0x000099))
 
-        if self.shape == 3 or self.shape == 5 or self.shape == 9 or self.shape == 12 or self.shape == 14:
+        if self.shape == 3 or self.shape == 5 or self.shape == 9 or self.shape == 20 or self.shape == 12 or self.shape == 14:
             painter.drawLine(x, y + self.squareWidth(), x, y)
 
             #gore
@@ -192,10 +192,14 @@ class Board(QFrame):
 
              #donja
 
-        if self.shape == 2 or self.shape == 4 or self.shape == 7 or self.shape == 12 or self.shape == 13:
+        if self.shape == 2 or self.shape == 4 or self.shape == 20 or self.shape == 7 or self.shape == 12 or self.shape == 13:
             painter.drawLine(x + self.squareHeight()+1,
                          y + self.squareWidth(), x + self.squareHeight(), y)
 
+        painter.setPen(QColor(0xFFFFFF))
+
+        if self.shape == 20:
+            painter.drawLine(x, y, x + self.squareHeight() - 1, y)
 
 
     def squareWidth(self):
@@ -335,14 +339,15 @@ class Board(QFrame):
 
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Information)
-            msgBox.setWindowTitle("PACMAN")
+            msgBox.setWindowTitle("Game over")
+            msgBox.setWindowIcon(QtGui.QIcon('pacman.ico'))
 
             if self.player1.poeni > self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 1! \n Points: ' + str(self.player1.poeni))
+                msgBox.setText('GAME OVER \nPlayer 1 won! \nPoints player 1: '+str(self.player1.poeni) + '\nPoints player 2: ' + str(self.player2.poeni))
             elif self.player1.poeni < self.player2.poeni:
-                msgBox.setText('GAME OVER!!! \n Winner is: \n PLAYER 2! \n Points: ' + str(self.player2.poeni))
+                msgBox.setText('GAME OVER \nPlayer 2 won! \nPoints player 1: '+str(self.player1.poeni) + '\nPoints player 2: ' + str(self.player2.poeni))
             else:
-                msgBox.setText('GAME OVER!!! \n EQUAL RESULT!')
+                msgBox.setText('GAME OVER \nDraw! \nPoints player 1: '+ str(self.player1.poeni)+'\nPoints player 2: ' + str(self.player2.poeni))
 
             msgBox.setStandardButtons(QMessageBox.Ok)
             returnValue = msgBox.exec()
