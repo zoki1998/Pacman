@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QGraphicsItem
 
 class Player(QGraphicsItem):
 
-    def __init__(self, x=0, y=10,
+    def __init__(self, x=0, y=10, x1=0, y1=0,
                  colour='green', icon='images/pacman.ico'):
         QGraphicsItem.__init__(self)
 
@@ -23,15 +23,17 @@ class Player(QGraphicsItem):
         self.img = QImage('images/pacman5.png')
         self.img2 = QImage('images/pacman6.png')
 
-
+        self.way1 = 0
         self.poeni = 0
         self.zivot = 3
         self.x = x
         self.y = y
-
+        self.x1 = x1
+        self.y1 = y1
+        self.konacno=x,y
     def paint(self, painter):
         x, y = self.x, self.y
-        target = QRectF(x * 42 + 10, y * 42 + 10, 42, 42)
+        target = QRectF(x * 42 + 10 + self.x1, y * 42 + 10 + self.y1, 42, 42)
         source = QRectF(0, 0, 42, 42)
         if self.game_over == False:
             painter.drawImage(target, self.i, source)
@@ -41,6 +43,11 @@ def zivot(player):
 
     if player.zivot > 0:
         player.zivot = player.zivot - 1;
+        player.x1 = 0
+        player.y1 = 0
+        player.oldkey=0
+        player.way1=0
+        player.key=0
         if player.id == 1:
             player.x = 0
             player.y = 10
@@ -55,84 +62,140 @@ def zivot(player):
         player.game_over = True
 
 
-def movePlayer(newX, newY, player, dots, tiles, board):
-
-    x = newX
-    y = newY
+def movePlayer(kljuc, player, dots, tiles, board):
     if player.game_over == False:
-        if x < 0 or x * 42 >= 882 or y < 0 or y * 42 >= 924:
-            if x == -1 and y == 10 and player.key == 1:
+        if player.way1 == 0:
 
-                x = 20
-                y = 10
+            if kljuc == 1:
+                if checkout(player, board, tiles,kljuc) == True:
+                    player.way1 = 1
+                    player.x1 += 4.20
+                    player.oldkey = player.key
+                    checkdots(dots, player, board)
+            elif kljuc == 2:
+                if checkout(player, board, tiles,kljuc) == True:
+                    player.way1 = 2
+                    player.x1 -= 4.20
+                    player.oldkey = player.key
+                    checkdots(dots, player, board)
 
-                player.oldkey = player.key
-                player.x = x
-                player.y = y
+            elif kljuc == 3:
+                if checkout(player, board, tiles,kljuc) == True:
+                   player.way1 = 3
+                   player.y1 += 4.20
+                   player.oldkey = player.key
+                   checkdots(dots, player, board)
+            elif kljuc == 4:
+                if checkout(player, board, tiles,kljuc) == True:
+                    player.way1 = 4
+                    player.y1 -= 4.
+                    player.oldkey = player.key
+                    checkdots(dots, player, board)
 
-                if dots.tacka[x * 22 + y] != 0:
+        else:
+            if player.way1 == 1:
+                player.x1 += 4.20
+                if player.x1 >= 42:
+                    player.x1 = 0
+                    player.x += 1
+                    player.way1 = 0
+                    checkout(player,board,tiles,1);
 
-                    if dots.tacka[x * 22 + y] == 1:
-                        player.poeni = player.poeni + 10
-                    else:
-                        player.poeni = player.poeni + 200
-                        board.opcija = True
-                        board.broj = board.broj + 5
-                        board.brojac1 = 0
 
-                    dots.tacka[x * 22 + y] = 0
+            elif player.way1 == 2:
+                player.x1 -= 4.20
+                if player.x1 <= -42:
+                    player.x1 = 0
+                    player.x -= 1
+                    player.way1 = 0
+                    checkout(player, board, tiles, 2);
 
-                board.levelUp() #provjera da li je usao u portal, ako jeste proveriti da li je pojeo duhove
-                return True
+            elif player.way1 == 3:
+                player.y1 += 4.20
+                if player.y1 >= 42:
+                    player.y1 = 0
+                    player.y += 1
+                    player.way1 = 0
 
-            elif x == 21 and y == 10 and player.key == 2:
-
-                x = 0
-                y = 10
-
-                player.oldkey = player.key
-                player.x = x
-                player.y = y
-
-                if dots.tacka[x * 22 + y] != 0:
-
-                    if dots.tacka[x * 22 + y] == 1:
-                        player.poeni = player.poeni + 10
-                    else:
-                        player.poeni = player.poeni + 200
-                        board.opcija = True
-                        board.broj = board.broj + 5
-                        board.brojac1 = 0
-
-                    dots.tacka[x * 22 + y] = 0
-                board.levelUp()
-                return True
 
             else:
-                player.key = 0
-                return False
+                player.y1 -= 4.20
+                if player.y1 <= -42:
+                    player.y1 = 0
+                    player.y -= 1
+                    player.way1 = 0
 
-        if tiles[x * 22 + y] == 10:
-            player.key = player.oldkey
-            return False
-
-        player.oldkey = player.key
-        player.x = x
-        player.y = y
-
-        if dots.tacka[x * 22 + y] != 0:
-
-            if dots.tacka[x * 22 + y] == 1:
-                player.poeni = player.poeni + 10
-            else:
-                player.poeni = player.poeni + 200
-                board.opcija = True  #BONUS --
-                board.broj = board.broj + 5
-                board.brojac1 = 0
-
-            dots.tacka[x * 22 + y] = 0
     else:
         player.x = 8
         player.y = 10
+        player.x1 = 0
+        player.y1 = 0
 
+
+
+
+
+def checkdots(dots, player, board):
+    if not(player.x==21 and player.y==10 or player.x==-1 and player.y==10):
+        if dots.tacka[player.x * 22 + player.y] != 0:
+            if dots.tacka[player.x * 22 + player.y] == 1:
+                player.poeni = player.poeni + 10
+            else:
+                player.poeni = player.poeni + 200
+                board.opcija = True  # BONUS --
+                board.broj = board.broj + 5
+                board.brojac1 = 0
+            dots.tacka[player.x * 22 + player.y] = 0
+
+
+def checkout(player, board, tiles,kljuc):
+    if player.x == -1 and player.y == 10 and kljuc == 2:
+        x = 20
+        y = 10
+        player.oldkey = player.key
+        player.x = x
+        player.y = y
+        player.x1 = 0
+        player.y1 = 0
+        player.way1 = 0
+        board.levelUp()  # provjera da li je usao u portal, ako jeste proveriti da li je pojeo duhove
+        return True
+    elif player.x == 21 and player.y == 10 and kljuc == 1:
+        x = 0
+        y = 10
+        player.oldkey = player.key
+        player.x = x
+        player.y = y
+        player.x1 = 0
+        player.y1 = 0
+        player.way1 = 0
+        board.levelUp( )
+        return True
+
+    return proveriZid(player, tiles,kljuc)
+
+
+def proveriZid(player,tiles,kljuc):
+    if kljuc == 1:
+        if (player.x +1 == 21 or player.x+1==22)and player.y == 10:
+
+            return True
+        else:
+            if tiles[(player.x +1)* 22 + player.y] == 10:
+                player.key = player.oldkey
+                return False
+    elif kljuc == 2:
+        if tiles[(player.x -1)* 22 + player.y] == 10:
+            player.key = player.oldkey
+            return False
+    elif kljuc== 3:
+        if tiles[player.x * 22 + player.y +1] == 10:
+            player.key = player.oldkey
+            return False
+    elif kljuc == 4:
+        if tiles[player.x * 22 + player.y-1] == 10:
+            player.key = player.oldkey
+            return False
     return True
+
+

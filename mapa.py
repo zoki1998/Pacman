@@ -1,10 +1,10 @@
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QGraphicsScene,QLabel, QApplication, QScrollArea
-
+from threading import Thread
 from PyQt5.QtGui import QTransform, QImage
 from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QGraphicsView, QVBoxLayout, QMessageBox
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, pyqtSlot
-
+from multiprocessing import Process
 from PyQt5.QtGui import QPainter, QColor
 import sys, time
 import dots as dot
@@ -74,6 +74,7 @@ class Board(QFrame):
         self.opcija = False  #za bonus
 
 
+
         self.ghost1 = g.Ghost(8,10)
         self.ghost2 = g.Ghost(9,10)
         self.ghost3 = g.Ghost(11,10)
@@ -118,7 +119,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 20
+        self.timer_interval = 21
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -212,104 +213,25 @@ class Board(QFrame):
 
     def timerEvent(self, event):
 
-        self.checkGameOver()
 
-        t = QTransform()
-        t1 = QTransform()
-        if(self.brojac % 10) == 0:
+        thread = Thread(target=self.funcija11, args=(self.player1,))
+        thread1 = Thread(target=self.funcija11, args=(self.player2,))
+        thread.start( )
+        thread1.start( )
+        thread.join( )
+        thread1.join( )
+        self.update( )
+        if self.slika_pom == 1:
+            self.slika_pom = 0
+        else:
+            self.slika_pom = 1
 
-            if self.player1.key != 0:
+        self.checkGameOver( )
 
-                if self.player1.key == 1:
-                    if self.slika_pom == 1:
-                        self.player1.i = self.player1.i3
-                    else:
-                        self.player1.i = self.player1.img2
-                    self.tryMove(self.player1.x - 1, self.player1.y,self.player1)
-
-                elif self.player1.key == 2:
-                    if self.slika_pom == 1:
-                        self.player1.i = self.player1.i2
-                    else:
-                        self.player1.i = self.player1.img
-                    self.tryMove(self.player1.x + 1, self.player1.y,self.player1)
-
-                elif self.player1.key == 3:
-                    self.player1.i = self.player1.i2
-                    self.player1.i.convertToFormat(QImage.Format_RGB888)
-                    t.rotate(90)
-
-                    if self.slika_pom == 1:
-                        self.player1.i = self.player1.i.transformed(t)
-
-                    else:
-                        self.player1.i = self.player1.img.transformed(t)
-                    self.tryMove(self.player1.x, self.player1.y + 1,self.player1)
-
-                elif self.player1.key == 4:
-                    self.player1.i = self.player1.i2
-                    self.player1.i.convertToFormat(QImage.Format_RGB888)
-                    t.rotate(-90)
-
-                    if self.slika_pom == 1:
-                        self.player1.i = self.player1.i.transformed(t)
-                    else:
-                        self.player1.i = self.player1.img.transformed(t)
-                    self.tryMove(self.player1.x, self.player1.y - 1,self.player1)
-
-            if self.player2.key != 0:
-
-                if self.player2.key == 1:
-
-                    if self.slika_pom == 1:
-                        self.player2.i = self.player2.i3
-                    else:
-                        self.player2.i = self.player2.img2
-                    self.tryMove(self.player2.x - 1, self.player2.y,self.player2)
-
-                elif self.player2.key == 2:
-
-                    if self.slika_pom == 1:
-                        self.player2.i = self.player2.i2
-                    else:
-                        self.player2.i = self.player2.img
-                    self.tryMove(self.player2.x + 1, self.player2.y,self.player2)
-
-                elif self.player2.key == 3:
-
-                    self.player2.i = self.player2.i2
-                    self.player2.i.convertToFormat(QImage.Format_RGB888)
-                    t1.rotate(90)
-
-                    if self.slika_pom == 1:
-                        self.player2.i = self.player2.i.transformed(t1)
-                    else:
-                        self.player2.i = self.player2.img.transformed(t1)
-                    self.tryMove(self.player2.x, self.player2.y + 1,self.player2)
-
-                elif self.player2.key == 4:
-
-                    self.player2.i = self.player2.i2
-                    self.player2.i.convertToFormat(QImage.Format_RGB888)
-                    t1.rotate(-90)
-
-                    if self.slika_pom == 1:
-                        self.player2.i = self.player2.i.transformed(t1)
-                    else:
-                        self.player2.i = self.player2.img.transformed(t1)
-                    self.tryMove(self.player2.x, self.player2.y - 1,self.player2)
-
-            if self.slika_pom == 1:
-                self.slika_pom = 0
-            else:
-                self.slika_pom = 1
-
-        if (self.brojac % self.broj) == 0:
-            if self.tt <= 4:
-                self.PokrenutiNaPocetku()
-            else:
-                for i in range(4):
-                    self.tryMove1(i)
+        if self.tt <= 4:
+            self.PokrenutiNaPocetku()
+        else:
+            self.tryMove1()
 
         if self.opcija == True:
             if self.brojac1 != 200:
@@ -322,6 +244,58 @@ class Board(QFrame):
         self.brojac = self.brojac + 1
         self.checkPoints()
         super(Board, self).timerEvent(event)
+
+    def funcija11(self, player):
+
+        t = QTransform()
+        t1 = QTransform()
+
+        if player.key != 0:
+
+            if player.key == 1:
+
+                if self.slika_pom == 1:
+                    player.i = player.i3
+                else:
+                    player.i = player.img2
+
+                self.tryMove(2, player)
+
+            elif player.key == 2:
+
+                if self.slika_pom == 1:
+                    player.i = player.i2
+                else:
+                    player.i = player.img
+
+                self.tryMove(1, player)
+
+            elif player.key == 3:
+
+                player.i = player.i2
+                player.i.convertToFormat(QImage.Format_RGB888)
+                t1.rotate(90)
+
+                if self.slika_pom == 1:
+                    player.i = player.i.transformed(t1)
+                else:
+                    player.i = player.img.transformed(t1)
+
+                self.tryMove(3, player)
+
+            elif player.key == 4:
+
+                player.i = self.player2.i2
+                player.i.convertToFormat(QImage.Format_RGB888)
+                t1.rotate(-90)
+
+                if self.slika_pom == 1:
+                    player.i = player.i.transformed(t1)
+                else:
+                    player.i = player.img.transformed(t1)
+
+                self.tryMove(4, player)
+
 
     def checkPoints(self):
 
@@ -355,14 +329,11 @@ class Board(QFrame):
             if returnValue == QMessageBox.Ok:
                 self.parent().close()
 
+
+
     def keyPressEvent(self, event):
 
         key = event.key()
-        t = QTransform()
-        t.rotate(90)
-
-
-
         if key == Qt.Key_Left:
             if self.player1.oldkey != 1 and self.tiles[(self.player1.x-1)*22+self.player1.y] != 10:
                 self.player1.key = 1
@@ -376,7 +347,7 @@ class Board(QFrame):
                     self.player1.key = 2
 
 
-        elif key == Qt.Key_Down: #potrebno je zabraniti ulazak u tunel za duhove
+        elif key == Qt.Key_Down:
             if self.player1.oldkey != 3 and self.tiles[self.player1.x*22+1+self.player1.y] != 10 and  (self.player1.x != 10 and self.player1.y != 9) :
                 self.player1.key = 3
 
@@ -412,22 +383,23 @@ class Board(QFrame):
         else:
             super(Board, self).keyPressEvent(event)
 
-    def tryMove(self, newX, newY,player=p.Player):
+    def tryMove(self, kljuc,player):
 
-        if p.movePlayer(newX, newY, player, self.dots, self.tiles,self):
-            self.update()
+        p.movePlayer(kljuc, player, self.dots, self.tiles, self)
 
-    def tryMove1(self, z):
 
-        if z == 0:
-            g.move(self.tiles, self.ghost1, self.player1, self.player2,self.opcija)
-        elif z == 1:
-            g.move(self.tiles, self.ghost2, self.player1, self.player2,self.opcija)
-        elif z == 2:
-            g.move(self.tiles, self.ghost3, self.player1, self.player2,self.opcija)
-        else:
-            g.move(self.tiles, self.ghost4, self.player1, self.player2,self.opcija)
 
+    def tryMove1(self):
+
+        thread = Thread(target=g.move, args=(self.tiles, self.ghost4, self.player1, self.player2,self.opcija,))
+        thread1 = Thread(target=g.move, args=(self.tiles, self.ghost1, self.player1, self.player2,self.opcija,))
+        thread2 = Thread(target=g.move, args=(self.tiles, self.ghost2, self.player1, self.player2,self.opcija,))
+        thread3 = Thread(target=g.move, args=(self.tiles, self.ghost3, self.player1, self.player2,self.opcija,))
+        threads=[thread, thread1,thread2, thread3]
+        for i in range(4):
+            threads[i].start()
+        for i in range(4):
+            threads[i].join()
         if self.player1.pocetak == 1:
             self.player1.key = 5
             self.player1.oldkey = 5
