@@ -64,6 +64,7 @@ class Board(QFrame):
 
     def __init__(self, parent):
 
+        self.threads = []
         self.pobjednik = 0
 
         self.player1 = p.Player()
@@ -112,7 +113,8 @@ class Board(QFrame):
         self.label3.move(400, 930)
 
         self.brojac = 0 #za timer
-
+        self.brojac2=0 #za plejera 1 da li je skrenuo
+        self.brojac3=0 #za plejera 2 da li je skrenuo
         self.player1.key = 0
         self.player1.oldkey = 0
         self.setFocusPolicy(Qt.StrongFocus)
@@ -212,15 +214,26 @@ class Board(QFrame):
         return 42
 
     def timerEvent(self, event):
+        if self.player1.pom != 0:
+            if self.brojac2 == 500:
+                self.brojac2 = 0
+            else:
+                self.brojac2 += 1
 
+        if self.player2.pom != 0:
+            if self.brojac3 == 500:
+                self.brojac3 = 0
+            else:
+                self.brojac3 += 1
+        self.funcija11(self.player1)
+        self.funcija11(self.player2)
 
-        thread = Thread(target=self.funcija11, args=(self.player1,))
-        thread1 = Thread(target=self.funcija11, args=(self.player2,))
-        thread.start( )
-        thread1.start( )
-        thread.join( )
-        thread1.join( )
-        self.update( )
+        #duhovi na pocetku
+        if self.tt <= 4:
+            self.PokrenutiNaPocetku()
+        else:
+            self.tryMove1() #niti
+
         if self.slika_pom == 1:
             self.slika_pom = 0
         else:
@@ -228,10 +241,6 @@ class Board(QFrame):
 
         self.checkGameOver( )
 
-        if self.tt <= 4:
-            self.PokrenutiNaPocetku()
-        else:
-            self.tryMove1()
 
         if self.opcija == True:
             if self.brojac1 != 200:
@@ -239,10 +248,11 @@ class Board(QFrame):
             else:
                 self.brojac1 = 0
                 self.opcija = False
-                self.broj = self.broj - 5
+                #self.broj = self.broj - 5
 
-        self.brojac = self.brojac + 1
+        #self.brojac = self.brojac + 1
         self.checkPoints()
+        self.update()
         super(Board, self).timerEvent(event)
 
     def funcija11(self, player):
@@ -259,7 +269,7 @@ class Board(QFrame):
                 else:
                     player.i = player.img2
 
-                self.tryMove(2, player)
+                self.tryMove(1 , player)
 
             elif player.key == 2:
 
@@ -268,7 +278,7 @@ class Board(QFrame):
                 else:
                     player.i = player.img
 
-                self.tryMove(1, player)
+                self.tryMove(2, player)
 
             elif player.key == 3:
 
@@ -335,10 +345,14 @@ class Board(QFrame):
 
         key = event.key()
         if key == Qt.Key_Left:
+            self.player1.pom=1
+            self.brojac2 = 0
             if self.player1.oldkey != 1 and self.tiles[(self.player1.x-1)*22+self.player1.y] != 10:
                 self.player1.key = 1
 
         elif key == Qt.Key_Right:
+            self.player1.pom=2
+            self.brojac2 = 0
             if self.player1.x+1 != 21:
                 if self.player1.oldkey != 2 and self.tiles[(self.player1.x+1)*22+self.player1.y] != 10:
                     self.player1.key = 2
@@ -348,16 +362,26 @@ class Board(QFrame):
 
 
         elif key == Qt.Key_Down:
+            self.player1.pom=3
+            self.brojac2 = 0
             if self.player1.oldkey != 3 and self.tiles[self.player1.x*22+1+self.player1.y] != 10 and  (self.player1.x != 10 and self.player1.y != 9) :
                 self.player1.key = 3
 
         elif key == Qt.Key_Up:
+            self.player1.pom=4
+            self.brojac2 = 0
             if self.player1.oldkey != 4 and self.tiles[self.player1.x*22-1+self.player1.y] != 10:
                 self.player1.key = 4
+
+
         elif key == Qt.Key_A:
+            self.player2.pom = 1
+            self.brojac3 = 0
             if self.player2.oldkey != 1 and self.tiles[(self.player2.x-1)*22+self.player2.y] != 10:
                 self.player2.key = 1
         elif key == Qt.Key_D:
+            self.player2.pom = 2
+            self.brojac3 = 0
             if self.player2.x+1 != 21:
                 if self.player2.oldkey != 2 and self.tiles[(self.player2.x + 1) * 22 + self.player2.y] != 10:
                     self.player2.key = 2
@@ -366,9 +390,13 @@ class Board(QFrame):
                     self.player2.key = 2
 
         elif key == Qt.Key_S:
+            self.player2.pom = 3
+            self.brojac3 = 0
             if self.player2.oldkey != 3 and self.tiles[self.player2.x * 22 + 1 + self.player2.y] != 10 and (self.player2.x != 10 and self.player2.y != 9) :
                 self.player2.key = 3
         elif key == Qt.Key_W:
+            self.player2.pom = 4
+            self.brojac3 = 0
             if self.player2.oldkey != 4 and self.tiles[self.player2.x * 22 - 1 + self.player2.y] != 10:
                 self.player2.key = 4
         elif key == Qt.Key_P:
@@ -387,19 +415,16 @@ class Board(QFrame):
 
         p.movePlayer(kljuc, player, self.dots, self.tiles, self)
 
+    def threadstarts(self):
 
+        for i in range (4):
+            self.threads[i].start()
 
-    def tryMove1(self):
+    def threadsjoins(self):
 
-        thread = Thread(target=g.move, args=(self.tiles, self.ghost4, self.player1, self.player2,self.opcija,))
-        thread1 = Thread(target=g.move, args=(self.tiles, self.ghost1, self.player1, self.player2,self.opcija,))
-        thread2 = Thread(target=g.move, args=(self.tiles, self.ghost2, self.player1, self.player2,self.opcija,))
-        thread3 = Thread(target=g.move, args=(self.tiles, self.ghost3, self.player1, self.player2,self.opcija,))
-        threads=[thread, thread1,thread2, thread3]
         for i in range(4):
-            threads[i].start()
-        for i in range(4):
-            threads[i].join()
+            self.threads[i].join()
+
         if self.player1.pocetak == 1:
             self.player1.key = 5
             self.player1.oldkey = 5
@@ -408,7 +433,18 @@ class Board(QFrame):
             self.player2.key = 5
             self.player2.oldkey = 5
             self.player2.pocetak = 0
-        self.update()
+
+    def tryMove1(self):
+
+        thread = Thread(target=g.move, args=(self.tiles, self.ghost4, self.player1, self.player2,self.opcija,))
+        thread1 = Thread(target=g.move, args=(self.tiles, self.ghost1, self.player1, self.player2,self.opcija,))
+        thread2 = Thread(target=g.move, args=(self.tiles, self.ghost2, self.player1, self.player2,self.opcija,))
+        thread3 = Thread(target=g.move, args=(self.tiles, self.ghost3, self.player1, self.player2,self.opcija,))
+
+        self.threads = [thread, thread1, thread2, thread3]
+
+        self.threadstarts()
+        self.threadsjoins()
 
     def PokrenutiNaPocetku(self):
 

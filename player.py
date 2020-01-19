@@ -11,6 +11,7 @@ class Player(QGraphicsItem):
 
         self.key = 0
         self.oldkey = 0
+        self.pom=0
 
         self.pocetak = 0
 
@@ -66,34 +67,34 @@ def movePlayer(kljuc, player, dots, tiles, board):
     if player.game_over == False:
         if player.way1 == 0:
 
-            if kljuc == 1:
-                if checkout(player, board, tiles,kljuc) == True:
-                    player.way1 = 1
+            if kljuc == 2:
+                if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
+                    player.way1 = 2
                     player.x1 += 4.20
                     player.oldkey = player.key
                     checkdots(dots, player, board)
-            elif kljuc == 2:
-                if checkout(player, board, tiles,kljuc) == True:
-                    player.way1 = 2
+            elif kljuc == 1:
+                if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
+                    player.way1 = 1
                     player.x1 -= 4.20
                     player.oldkey = player.key
                     checkdots(dots, player, board)
 
             elif kljuc == 3:
-                if checkout(player, board, tiles,kljuc) == True:
+                if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
                    player.way1 = 3
                    player.y1 += 4.20
                    player.oldkey = player.key
                    checkdots(dots, player, board)
             elif kljuc == 4:
-                if checkout(player, board, tiles,kljuc) == True:
+                if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
                     player.way1 = 4
                     player.y1 -= 4.
                     player.oldkey = player.key
                     checkdots(dots, player, board)
 
         else:
-            if player.way1 == 1:
+            if player.way1 == 2:
                 player.x1 += 4.20
                 if player.x1 >= 42:
                     player.x1 = 0
@@ -102,7 +103,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
                     checkout(player,board,tiles,1);
 
 
-            elif player.way1 == 2:
+            elif player.way1 == 1:
                 player.x1 -= 4.20
                 if player.x1 <= -42:
                     player.x1 = 0
@@ -131,12 +132,8 @@ def movePlayer(kljuc, player, dots, tiles, board):
         player.x1 = 0
         player.y1 = 0
 
-
-
-
-
 def checkdots(dots, player, board):
-    if not(player.x==21 and player.y==10 or player.x==-1 and player.y==10):
+    if not(player.x == 21 and player.y == 10 or player.x == -1 and player.y == 10):
         if dots.tacka[player.x * 22 + player.y] != 0:
             if dots.tacka[player.x * 22 + player.y] == 1:
                 player.poeni = player.poeni + 10
@@ -149,7 +146,7 @@ def checkdots(dots, player, board):
 
 
 def checkout(player, board, tiles,kljuc):
-    if player.x == -1 and player.y == 10 and kljuc == 2:
+    if player.x == -1 and player.y == 10 and kljuc == 1:
         x = 20
         y = 10
         player.oldkey = player.key
@@ -160,7 +157,7 @@ def checkout(player, board, tiles,kljuc):
         player.way1 = 0
         board.levelUp()  # provjera da li je usao u portal, ako jeste proveriti da li je pojeo duhove
         return True
-    elif player.x == 21 and player.y == 10 and kljuc == 1:
+    elif player.x == 21 and player.y == 10 and kljuc == 2:
         x = 0
         y = 10
         player.oldkey = player.key
@@ -176,7 +173,7 @@ def checkout(player, board, tiles,kljuc):
 
 
 def proveriZid(player,tiles,kljuc):
-    if kljuc == 1:
+    if kljuc == 2:
         if (player.x +1 == 21 or player.x+1==22)and player.y == 10:
 
             return True
@@ -184,12 +181,12 @@ def proveriZid(player,tiles,kljuc):
             if tiles[(player.x +1)* 22 + player.y] == 10:
                 player.key = player.oldkey
                 return False
-    elif kljuc == 2:
+    elif kljuc == 1:
         if tiles[(player.x -1)* 22 + player.y] == 10:
             player.key = player.oldkey
             return False
     elif kljuc== 3:
-        if tiles[player.x * 22 + player.y +1] == 10:
+        if tiles[player.x * 22 + player.y +1] == 10 or (player.x == 10 and player.y + 1 == 9):
             player.key = player.oldkey
             return False
     elif kljuc == 4:
@@ -198,4 +195,46 @@ def proveriZid(player,tiles,kljuc):
             return False
     return True
 
+def proveriskretanje(player,tiles,dots,board):
 
+    if player.pom!=0:
+        if player.pom==1:
+            if proveriZid(player,tiles,1):
+                if checkout(player, board, tiles,1):
+                    player.way1 = 1
+                    player.x1 -= 4.20
+                    player.oldkey = 1
+                    player.key = 1
+                    checkdots(dots, player, board)
+                    return False
+        elif player.pom == 2:
+            if proveriZid(player, tiles, 2):
+                if checkout(player, board, tiles, 2):
+                    player.way1 = 2
+                    player.x1 += 4.20
+                    player.oldkey = 2
+                    player.key = 2
+                    checkdots(dots, player, board)
+                    return False
+
+        elif player.pom == 3:
+            if proveriZid(player, tiles, 3):
+                if checkout(player, board, tiles, 3):
+                    player.way1 = 3
+                    player.y1 += 4.20
+                    player.oldkey = 3
+                    player.key = 3
+                    checkdots(dots, player, board)
+                    return False
+
+        elif player.pom == 4:
+            if proveriZid(player, tiles, 4):
+                if checkout(player, board, tiles, 4):
+                    player.way1 = 4
+                    player.y1 -= 4.20
+                    player.oldkey = 4
+                    player.key = 4
+                    checkdots(dots, player, board)
+                    return False
+    else:
+        return True;

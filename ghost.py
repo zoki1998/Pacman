@@ -37,12 +37,6 @@ def move(tiles, ghost, player, player1, opcija):
 
     l = [] #for free positions
     if opcija == False:  #da li je bonus (onda igrac jede duhove)
-        """  
-            if ghost.x == player.x and ghost.y == player.y and ghost.x1 == player.x1 and ghost.y1 == player.y1:
-                pl.zivot(player)
-            if ghost.x == player1.x and ghost.y == player1.y and ghost.x1 == player1.x1 and ghost.y1 == player1.y1:
-                pl.zivot(player1)
-        else:"""
 
         if ghost.x*42 + ghost.x1 == player1.x*42 + player1.x1 and ghost.y*42 + ghost.y1 == player1.y*42 + player1.y1:
             pl.zivot(player1)
@@ -50,10 +44,12 @@ def move(tiles, ghost, player, player1, opcija):
             pl.zivot(player)
 
     else:
-        if ghost.x == player.x and ghost.y == player.y and ghost.x1 == player.x1 and ghost.y1 == player.y1:
+        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             ghost.sakriven = True
-        if ghost.x == player1.x and ghost.y == player1.y and ghost.x1 == player1.x1 and ghost.y1 == player1.y1:
+            player.poeni = player.poeni + 500
+        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
             ghost.sakriven = True
+            player1.poeni = player1.poeni + 500
 
     if ghost.sakriven == False:
         if ghost.x + 1 != 21:
@@ -165,12 +161,13 @@ def move(tiles, ghost, player, player1, opcija):
         if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
             pl.zivot(player)
     else:
-        if ghost.x == player.x and ghost.y == player.y and ghost.x1 == player.x1 and ghost.y1 == player.y1:
+
+        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             ghost.sakriven = True
-            player.poeni=player.poeni+500
-        if ghost.x == player1.x and ghost.y == player1.y and ghost.x1 == player1.x1 and ghost.y1 == player1.y1:
+            player.poeni = player.poeni + 500
+        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
             ghost.sakriven = True
-            player1.poeni=player1.poeni+500
+            player1.poeni = player1.poeni + 500
 
     if ghost.sakriven == True:
 
