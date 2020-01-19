@@ -7,7 +7,9 @@ from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, pyqtSlot
 from multiprocessing import Process
 from PyQt5.QtGui import QPainter, QColor
 import sys, time
+import  random as ran
 import dots as dot
+import force as f
 
 import player as p
 import ghost as g
@@ -66,6 +68,14 @@ class Board(QFrame):
 
         self.threads = []
         self.pobjednik = 0
+
+        self.brojacZaSilu = 0
+        self.usporenjeIgraca = 0
+        self.prikazanaSila = False
+        self.vrijemePrikazavanja = ran.randrange(7,15)
+        self.vrijemeTrajanja = ran.randrange(5,10)
+
+        self.sila = f.Force()
 
         self.player1 = p.Player()
         self.player1.id = 1
@@ -127,7 +137,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 45
+        self.timer_interval = 50
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -173,6 +183,9 @@ class Board(QFrame):
         self.ghost2.paint(painter,self.opcija)
         self.ghost3.paint(painter,self.opcija)
         self.ghost4.paint(painter,self.opcija)
+
+        if self.prikazanaSila == True:
+            self.sila.paint(painter)
 
     def setshape(self, oblik):
 
@@ -220,6 +233,7 @@ class Board(QFrame):
         return 42
 
     def timerEvent(self, event):
+
         if self.player1.pom != 0:
             if self.brojac2 == 500:
                 self.brojac2 = 0
@@ -231,8 +245,30 @@ class Board(QFrame):
                 self.brojac3 = 0
             else:
                 self.brojac3 += 1
-        self.funcija11(self.player1)
-        self.funcija11(self.player2)
+
+        if self.player1.pojeosilu == True:
+            self.player1.brojacZaSilu += 1
+            if self.player1.brojacZaSilu == 40:
+                self.player1.brojacZaSilu = 0
+                self.player1.pojeosilu = False
+            if self.usporenjeIgraca%2 == 0:
+                self.funcija11(self.player1)
+        else:
+            self.funcija11(self.player1)
+
+
+        if self.player2.pojeosilu == True:
+            self.player2.brojacZaSilu += 1
+            if self.player2.brojacZaSilu == 40:
+                self.player2.brojacZaSilu = 0
+                self.player2.pojeosilu = False
+            if self.usporenjeIgraca%2 == 0:
+                self.funcija11(self.player2)
+        else:
+            self.funcija11(self.player2)
+
+        if self.usporenjeIgraca == 100:
+            self.usporenjeIgraca += 1
 
         if self.brojac1%self.broj==0:
             if self.tt <= 4:
@@ -247,7 +283,6 @@ class Board(QFrame):
 
         self.checkGameOver( )
 
-
         if self.opcija == True:
             if self.brojac1 != 200:
                 self.brojac1 = self.brojac1 + 1
@@ -256,7 +291,18 @@ class Board(QFrame):
                 self.opcija = False
                 #self.broj = self.broj - 5
 
-        #self.brojac = self.brojac + 1
+
+        self.brojacZaSilu+=1
+        if self.brojacZaSilu*50/1000 == self.vrijemePrikazavanja:
+            self.prikazanaSila = True
+            self.sila.forceFunction(self.dots,self)
+
+        if (self.brojacZaSilu*50/1000 - self.vrijemePrikazavanja) == self.vrijemeTrajanja:
+            self.prikazanaSila = False
+            self.vrijemePrikazavanja = ran.randrange(7, 15)
+            self.vrijemeTrajanja = ran.randrange(5, 10)
+            self.brojacZaSilu = 0
+
         self.checkPoints()
         self.update()
         super(Board, self).timerEvent(event)

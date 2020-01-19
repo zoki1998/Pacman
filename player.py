@@ -16,7 +16,7 @@ class Player(QGraphicsItem):
         self.pocetak = 0
 
         self.game_over = False
-
+        self.brojacZaSilu = 0
         self.colour = colour
         self.i = QImage(icon)
         self.i2 = QImage(icon)
@@ -24,6 +24,7 @@ class Player(QGraphicsItem):
         self.img = QImage('images/pacman5.png')
         self.img2 = QImage('images/pacman6.png')
 
+        self.pojeosilu = False
         self.way1 = 0
         self.poeni = 0
         self.zivot = 3
@@ -182,6 +183,14 @@ def checkdots(dots, player, board):
                 board.broj = board.broj + 5
                 board.brojac5 = 0
             dots.tacka[player.x * 22 + player.y] = 0
+        if board.prikazanaSila == True:
+            if player.x == board.sila.x and player.y == board.sila.y:
+                if board.sila.option == 0:
+                    player.pojeosilu = True
+                    board.prikazanaSila = False
+                elif board.sila.option == 1:
+                    player.zivot += 1
+                    board.prikazanaSila = False
 
 
 def checkout(player, board, tiles,kljuc):
