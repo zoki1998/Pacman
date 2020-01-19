@@ -65,25 +65,45 @@ def zivot(player):
 
 def movePlayer(kljuc, player, dots, tiles, board):
     if player.game_over == False:
+
+        if board.opcija == False:  # da li je bonus (onda igrac jede duhove)
+            if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
+                zivot(player)
+            if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
+                zivot(player)
+            if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
+                zivot(player)
+            if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
+                zivot(player)
+        elif board.opcija == True:
+            if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
+                board.ghost1.sakriven = True
+            if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
+                board.ghost2.sakriven = True
+            if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
+                board.ghost3.sakriven = True
+            if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
+                board.ghost4.sakriven = True
+
         if player.way1 == 0:
 
             if kljuc == 2:
                 if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
                     player.way1 = 2
-                    player.x1 += 4.20
+                    player.x1 = round(player.x1 + 4.20,2)
                     player.oldkey = player.key
                     checkdots(dots, player, board)
             elif kljuc == 1:
                 if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
                     player.way1 = 1
-                    player.x1 -= 4.20
+                    player.x1 = round(player.x1 - 4.20,2)
                     player.oldkey = player.key
                     checkdots(dots, player, board)
 
             elif kljuc == 3:
                 if checkout(player, board, tiles,kljuc) == True and proveriskretanje(player,tiles,dots,board):
                    player.way1 = 3
-                   player.y1 += 4.20
+                   player.y1 = round(player.y1 + 4.20,2)
                    player.oldkey = player.key
                    checkdots(dots, player, board)
             elif kljuc == 4:
@@ -95,7 +115,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
 
         else:
             if player.way1 == 2:
-                player.x1 += 4.20
+                player.x1 = round(player.x1 + 4.20,2)
                 if player.x1 >= 42:
                     player.x1 = 0
                     player.x += 1
@@ -104,7 +124,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
 
 
             elif player.way1 == 1:
-                player.x1 -= 4.20
+                player.x1 = round(player.x1 - 4.20,2)
                 if player.x1 <= -42:
                     player.x1 = 0
                     player.x -= 1
@@ -112,7 +132,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
                     checkout(player, board, tiles, 2);
 
             elif player.way1 == 3:
-                player.y1 += 4.20
+                player.y1 = round(player.y1 + 4.20,2)
                 if player.y1 >= 42:
                     player.y1 = 0
                     player.y += 1
@@ -120,7 +140,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
 
 
             else:
-                player.y1 -= 4.20
+                player.y1 = round(player.y1 - 4.20,2)
                 if player.y1 <= -42:
                     player.y1 = 0
                     player.y -= 1
@@ -132,8 +152,27 @@ def movePlayer(kljuc, player, dots, tiles, board):
         player.x1 = 0
         player.y1 = 0
 
+    if board.opcija == False:  #da li je bonus (onda igrac jede duhove)
+        if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
+            zivot(player)
+        if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
+            zivot(player)
+        if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
+            zivot(player)
+        if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
+            zivot(player)
+    elif board.opcija == True:
+        if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
+            board.ghost1.sakriven = True
+        if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
+            board.ghost2.sakriven = True
+        if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
+            board.ghost3.sakriven = True
+        if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
+            board.ghost4.sakriven = True
+
 def checkdots(dots, player, board):
-    if not(player.x == 21 and player.y == 10 or player.x == -1 and player.y == 10):
+    if not((player.x == 21 and player.y == 10) or (player.x == -1 and player.y == 10)):
         if dots.tacka[player.x * 22 + player.y] != 0:
             if dots.tacka[player.x * 22 + player.y] == 1:
                 player.poeni = player.poeni + 10
@@ -141,7 +180,7 @@ def checkdots(dots, player, board):
                 player.poeni = player.poeni + 200
                 board.opcija = True  # BONUS --
                 board.broj = board.broj + 5
-                board.brojac1 = 0
+                board.brojac5 = 0
             dots.tacka[player.x * 22 + player.y] = 0
 
 
@@ -202,7 +241,7 @@ def proveriskretanje(player,tiles,dots,board):
             if proveriZid(player,tiles,1):
                 if checkout(player, board, tiles,1):
                     player.way1 = 1
-                    player.x1 -= 4.20
+                    player.x1 = round(player.x1 - 4.20,2)
                     player.oldkey = 1
                     player.key = 1
                     checkdots(dots, player, board)
@@ -211,7 +250,7 @@ def proveriskretanje(player,tiles,dots,board):
             if proveriZid(player, tiles, 2):
                 if checkout(player, board, tiles, 2):
                     player.way1 = 2
-                    player.x1 += 4.20
+                    player.x1 = round(player.x1 + 4.20,2)
                     player.oldkey = 2
                     player.key = 2
                     checkdots(dots, player, board)
@@ -221,7 +260,7 @@ def proveriskretanje(player,tiles,dots,board):
             if proveriZid(player, tiles, 3):
                 if checkout(player, board, tiles, 3):
                     player.way1 = 3
-                    player.y1 += 4.20
+                    player.y1 = round(player.y1 + 4.20,2)
                     player.oldkey = 3
                     player.key = 3
                     checkdots(dots, player, board)
@@ -231,7 +270,7 @@ def proveriskretanje(player,tiles,dots,board):
             if proveriZid(player, tiles, 4):
                 if checkout(player, board, tiles, 4):
                     player.way1 = 4
-                    player.y1 -= 4.20
+                    player.y1 = round(player.y1 - 4.20,2)
                     player.oldkey = 4
                     player.key = 4
                     checkdots(dots, player, board)

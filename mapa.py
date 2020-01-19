@@ -80,7 +80,13 @@ class Board(QFrame):
         self.ghost2 = g.Ghost(9,10)
         self.ghost3 = g.Ghost(11,10)
         self.ghost4 = g.Ghost(12,10)
-
+        self.ghost2.id=2
+        self.ghost3.id=3
+        self.ghost4.id=4
+        self.ghost1.id=1
+        self.ghost2.i=QImage('images/ghost1.png')
+        self.ghost3.i = QImage('images/ghost2.png')
+        self.ghost4.i = QImage('images/ghost3.png')
         self.tt = 0
 
         self.level = 1
@@ -121,7 +127,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 21
+        self.timer_interval = 45
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -228,11 +234,11 @@ class Board(QFrame):
         self.funcija11(self.player1)
         self.funcija11(self.player2)
 
-        #duhovi na pocetku
-        if self.tt <= 4:
-            self.PokrenutiNaPocetku()
-        else:
-            self.tryMove1() #niti
+        if self.brojac1%self.broj==0:
+            if self.tt <= 4:
+                self.PokrenutiNaPocetku()
+            else:
+                self.tryMove1()  # niti
 
         if self.slika_pom == 1:
             self.slika_pom = 0

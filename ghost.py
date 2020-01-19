@@ -19,6 +19,7 @@ class Ghost(QGraphicsItem):
         self.x1 = x1
         self.y1 = y1
         self.sakriven = False
+        self.id=0
 
 
     def paint(self, painter,opcija):
@@ -35,21 +36,7 @@ class Ghost(QGraphicsItem):
 
 def move(tiles, ghost, player, player1, opcija):
 
-    l = [] #for free positions
-    if opcija == False:  #da li je bonus (onda igrac jede duhove)
-
-        if ghost.x*42 + ghost.x1 == player1.x*42 + player1.x1 and ghost.y*42 + ghost.y1 == player1.y*42 + player1.y1:
-            pl.zivot(player1)
-        if ghost.x*42 + ghost.x1 == player.x*42 + player.x1 and ghost.y*42 + ghost.y1 == player.y*42 + player.y1:
-            pl.zivot(player)
-
-    else:
-        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
-            ghost.sakriven = True
-            player.poeni = player.poeni + 500
-        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
-            ghost.sakriven = True
-            player1.poeni = player1.poeni + 500
+    l = [] #for free position
 
     if ghost.sakriven == False:
         if ghost.x + 1 != 21:
@@ -72,22 +59,22 @@ def move(tiles, ghost, player, player1, opcija):
                 d = ran.randrange(0, len(l))
                 if l[d] == 1:
                     ghost.x = ghost.x
-                    ghost.y1 = ghost.y1 - 4.20
+                    ghost.y1 = round(ghost.y1 - 4.20,2)
                     ghost.way1 = 1
 
                 elif l[d] == 2:
                     ghost.x = ghost.x
-                    ghost.y1 = ghost.y1 + 4.20
+                    ghost.y1 = round(ghost.y1 + 4.20,2)
                     ghost.way1 = 2
                 elif l[d] == 3:
-                    ghost.x1 = ghost.x1 - 4.20
+                    ghost.x1 = round(ghost.x1 - 4.20,2)
                     ghost.way1 = 3
 
                     if ghost.x == -1:
                         ghost.x = 20
                     ghost.y = ghost.y
                 elif l[d] == 4:
-                    ghost.x1 = ghost.x1 + 4.20
+                    ghost.x1 = round(ghost.x1 + 4.20,2)
                     ghost.way1 = 4
                     if ghost.x == 21:
                         ghost.x = 0
@@ -98,7 +85,7 @@ def move(tiles, ghost, player, player1, opcija):
             else:
                 if ghost.way == 4:
 
-                    ghost.x1 = ghost.x1 + 4.20
+                    ghost.x1 = round(ghost.x1 + 4.20,2)
                     ghost.way1 = 4
                     if ghost.x == 21:
                         ghost.x = 0
@@ -106,7 +93,7 @@ def move(tiles, ghost, player, player1, opcija):
 
                 elif ghost.way == 3:
 
-                    ghost.x1 = ghost.x1 - 4.20
+                    ghost.x1 = round(ghost.x1 - 4.20,2)
                     ghost.way1 = 3
                     if ghost.x == -1:
                         ghost.x = 20
@@ -114,30 +101,30 @@ def move(tiles, ghost, player, player1, opcija):
 
                 elif ghost.way == 2:
                     ghost.x = ghost.x
-                    ghost.y1 = ghost.y1 + 4.20
+                    ghost.y1 = round(ghost.y1 + 4.20,2)
                     ghost.way1 = 2
 
                 elif ghost.way == 1:
                     ghost.x = ghost.x
-                    ghost.y1 = ghost.y1 - 4.20
+                    ghost.y1 = round(ghost.y1 - 4.20,2)
                     ghost.way1 = 1
         else:
             if ghost.way1 == 1:
                 ghost.x = ghost.x
-                ghost.y1 = ghost.y1 - 4.20
+                ghost.y1 = round(ghost.y1 - 4.20,2)
                 if ghost.y1 <= -42:
                     ghost.y1 = 0
                     ghost.y = ghost.y - 1
                     ghost.way1=0
             elif ghost.way1 == 2:
                 ghost.x = ghost.x
-                ghost.y1 = ghost.y1 + 4.20
+                ghost.y1 = round(ghost.y1 + 4.20,2)
                 if ghost.y1 >= 42:
                     ghost.y1 = 0
                     ghost.y = ghost.y + 1
                     ghost.way1 = 0
             elif ghost.way1== 3:
-                ghost.x1 = ghost.x1 - 4.20
+                ghost.x1 = round(ghost.x1 - 4.20,2)
                 if ghost.x1 <= -42:
                     ghost.x1 = 0
                     ghost.x = ghost.x - 1
@@ -146,7 +133,7 @@ def move(tiles, ghost, player, player1, opcija):
                     ghost.x = 20
                 ghost.y = ghost.y
             else:
-                ghost.x1 = ghost.x1 + 4.20
+                ghost.x1 = round(ghost.x1 + 4.20,2)
                 if ghost.x1 >= 42:
                     ghost.x1 = 0
                     ghost.x = ghost.x + 1
@@ -154,20 +141,6 @@ def move(tiles, ghost, player, player1, opcija):
                 if ghost.x == 21:
                     ghost.x = 0
                 ghost.y = ghost.y
-
-    if opcija == False:
-        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
-            pl.zivot(player1)
-        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
-            pl.zivot(player)
-    else:
-
-        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
-            ghost.sakriven = True
-            player.poeni = player.poeni + 500
-        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
-            ghost.sakriven = True
-            player1.poeni = player1.poeni + 500
 
     if ghost.sakriven == True:
 
