@@ -3,6 +3,7 @@ from PyQt5.QtGui import (QBrush, QColor, QImage)
 from PyQt5.QtWidgets import QGraphicsItem
 import random as ran
 import player as pl
+import multiprocessing
 
 class Ghost(QGraphicsItem):
 
@@ -40,18 +41,7 @@ def move(tiles, ghost, player, player1, opcija):
 
     if ghost.sakriven == False:
 
-        if opcija == False:
-            if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and  ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
-                pl.zivot(player)
-            if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and  ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
-                pl.zivot(player1)
-        elif opcija == True:
-            if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and  ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
-                ghost.sakriven = True
-                player.poeni += 500
-            if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and  ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
-                ghost.sakriven = True
-                player1.poeni += 500
+        p = multiprocessing.Process(target=checkPosition(player, player1, opcija, ghost))
 
         if ghost.x + 1 != 21:
             if tiles[(ghost.x + 1) * 22 + ghost.y] != 10:
@@ -156,14 +146,21 @@ def move(tiles, ghost, player, player1, opcija):
                     ghost.x = 0
                 ghost.y = ghost.y
 
+    p = multiprocessing.Process(target=checkPosition(player, player1, opcija, ghost))
+
     if ghost.sakriven == True:
 
         ghost.x = 8
         ghost.y = 10
 
+
+
+def checkPosition(player, player1, opcija, ghost):
+
     if opcija == False:
         if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
             pl.zivot(player)
+            print('ziivoottt')
         if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             pl.zivot(player1)
     elif opcija == True:
@@ -173,6 +170,8 @@ def move(tiles, ghost, player, player1, opcija):
         if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             ghost.sakriven = True
             player1.poeni += 500
+
+
 
 
 
