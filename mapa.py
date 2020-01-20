@@ -611,14 +611,14 @@ class Board(QFrame):
             self.player1.id = 1
             self.player1.zivot = zivot1
             self.player1.poeni = bodovi1
-            if self.player1.zivot == -1:
+            if self.player1.zivot == 0:
                 self.player1.game_over = True
             self.player2 = p.Player(20, 10)
             self.player2.id = 2
             self.player2.zivot = zivot2
             self.player2.poeni = bodovi2
             self.player2.i = self.player2.i3
-            if self.player2.zivot == -1:
+            if self.player2.zivot == 0:
                 self.player2.game_over = True
 
             self.opcija = False  #bonuuus

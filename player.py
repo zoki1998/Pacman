@@ -150,12 +150,16 @@ def checkPosition(player,board):
     elif board.opcija == True:
         if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
             board.ghost1.sakriven = True
+            player.poeni += 500
         if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
             board.ghost2.sakriven = True
+            player.poeni += 500
         if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
             board.ghost3.sakriven = True
+            player.poeni += 500
         if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
             board.ghost4.sakriven = True
+            player.poeni += 500
 def checkdots(dots, player, board):
     if not((player.x == 21 and player.y == 10) or (player.x == -1 and player.y == 10)):
         if dots.tacka[player.x * 22 + player.y] != 0:
