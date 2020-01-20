@@ -1,7 +1,7 @@
 from PyQt5.QtCore import (QRectF, Qt)
 from PyQt5.QtGui import (QBrush, QColor, QImage)
 from PyQt5.QtWidgets import QGraphicsItem
-
+import  multiprocessing
 
 class Player(QGraphicsItem):
 
@@ -67,24 +67,7 @@ def zivot(player):
 def movePlayer(kljuc, player, dots, tiles, board):
     if player.game_over == False:
 
-        if board.opcija == False:  # da li je bonus (onda igrac jede duhove)
-            if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
-                zivot(player)
-            if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
-                zivot(player)
-            if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
-                zivot(player)
-            if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
-                zivot(player)
-        elif board.opcija == True:
-            if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
-                board.ghost1.sakriven = True
-            if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
-                board.ghost2.sakriven = True
-            if board.ghost3.x * 42 + board.ghost3.x1 == player.x * 42 + player.x1 and board.ghost3.y * 42 + board.ghost3.y1 == player.y * 42 + player.y1:
-                board.ghost3.sakriven = True
-            if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
-                board.ghost4.sakriven = True
+        p = multiprocessing.Process(target=checkPosition(player, board))
 
         if player.way1 == 0:
 
@@ -146,14 +129,16 @@ def movePlayer(kljuc, player, dots, tiles, board):
                     player.y1 = 0
                     player.y -= 1
                     player.way1 = 0
-
+        p = multiprocessing.Process(target=checkPosition(player, board))
     else:
         player.x = 8
         player.y = 10
         player.x1 = 0
         player.y1 = 0
 
-    if board.opcija == False:  #da li je bonus (onda igrac jede duhove)
+
+def checkPosition(player,board):
+    if board.opcija == False:  # da li je bonus (onda igrac jede duhove)
         if board.ghost1.x * 42 + board.ghost1.x1 == player.x * 42 + player.x1 and board.ghost1.y * 42 + board.ghost1.y1 == player.y * 42 + player.y1:
             zivot(player)
         if board.ghost2.x * 42 + board.ghost2.x1 == player.x * 42 + player.x1 and board.ghost2.y * 42 + board.ghost2.y1 == player.y * 42 + player.y1:
@@ -171,7 +156,6 @@ def movePlayer(kljuc, player, dots, tiles, board):
             board.ghost3.sakriven = True
         if board.ghost4.x * 42 + board.ghost4.x1 == player.x * 42 + player.x1 and board.ghost4.y * 42 + board.ghost4.y1 == player.y * 42 + player.y1:
             board.ghost4.sakriven = True
-
 def checkdots(dots, player, board):
     if not((player.x == 21 and player.y == 10) or (player.x == -1 and player.y == 10)):
         if dots.tacka[player.x * 22 + player.y] != 0:
