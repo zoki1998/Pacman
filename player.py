@@ -190,6 +190,7 @@ def checkdots(dots, player, board):
                     board.prikazanaSila = False
                 elif board.sila.option == 1:
                     player.zivot += 1
+                    player.pojeosilu = True
                     board.prikazanaSila = False
 
 

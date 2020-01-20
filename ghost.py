@@ -39,6 +39,20 @@ def move(tiles, ghost, player, player1, opcija):
     l = [] #for free position
 
     if ghost.sakriven == False:
+
+        if opcija == False:
+            if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and  ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
+                pl.zivot(player)
+            if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and  ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
+                pl.zivot(player1)
+        elif opcija == True:
+            if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and  ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
+                ghost.sakriven = True
+                player.poeni += 500
+            if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and  ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
+                ghost.sakriven = True
+                player1.poeni += 500
+
         if ghost.x + 1 != 21:
             if tiles[(ghost.x + 1) * 22 + ghost.y] != 10:
                 if  ghost.way != 3:
@@ -146,6 +160,19 @@ def move(tiles, ghost, player, player1, opcija):
 
         ghost.x = 8
         ghost.y = 10
+
+    if opcija == False:
+        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
+            pl.zivot(player)
+        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
+            pl.zivot(player1)
+    elif opcija == True:
+        if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
+            ghost.sakriven = True
+            player.poeni += 500
+        if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
+            ghost.sakriven = True
+            player1.poeni += 500
 
 
 

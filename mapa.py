@@ -71,9 +71,10 @@ class Board(QFrame):
 
         self.brojacZaSilu = 0
         self.usporenjeIgraca = 0
+        self.usporenjeIgraca2 = 0
         self.prikazanaSila = False
         self.vrijemePrikazavanja = ran.randrange(7,15)
-        self.vrijemeTrajanja = ran.randrange(5,10)
+        self.vrijemeTrajanja = ran.randrange(5,15)
 
         self.sila = f.Force()
 
@@ -84,7 +85,7 @@ class Board(QFrame):
         self.player2.i = self.player2.i3
         self.opcija = False  #za bonus
 
-
+        self.broj1 = 5
 
         self.ghost1 = g.Ghost(8,10)
         self.ghost2 = g.Ghost(9,10)
@@ -122,7 +123,7 @@ class Board(QFrame):
         self.label2 = QLabel(text2, self)
         self.label2.setFont(QtGui.QFont('SansSerif', 15))
         self.label2.move(600, 930)
-
+        self.radniBrojac = 0
         text3 = "Level: 1"
         self.label3 = QLabel(text3, self)
         self.label3.setFont(QtGui.QFont('SansSerif', 15))
@@ -137,7 +138,7 @@ class Board(QFrame):
 
         self.color1 = 0xFF0000
         self.color2 = 0x000000
-        self.timer_interval = 50
+        self.timer_interval = 10
         self.scene = QGraphicsScene()
         self.scene.addItem(self.player1)
         self.scene.addItem(self.player2)
@@ -176,6 +177,9 @@ class Board(QFrame):
                 self.draw(x * 42, y * 42, painter, QColor(0x000000))
                 self.dots.paint(painter, x, y)
 
+        if self.prikazanaSila == True:
+            self.sila.paint(painter)
+
         self.player1.paint(painter)
         self.player2.paint(painter)
 
@@ -183,9 +187,6 @@ class Board(QFrame):
         self.ghost2.paint(painter,self.opcija)
         self.ghost3.paint(painter,self.opcija)
         self.ghost4.paint(painter,self.opcija)
-
-        if self.prikazanaSila == True:
-            self.sila.paint(painter)
 
     def setshape(self, oblik):
 
@@ -234,84 +235,96 @@ class Board(QFrame):
 
     def timerEvent(self, event):
 
-        if self.player1.pom != 0:
-            if self.brojac2 == 500:
-                self.brojac2 = 0
-            else:
-                self.brojac2 += 1
+        if self.radniBrojac%5 == 0:
 
-        if self.player2.pom != 0:
-            if self.brojac3 == 500:
-                self.brojac3 = 0
-            else:
-                self.brojac3 += 1
+            if self.player1.pom != 0:
+                if self.brojac2 == 500:
+                    self.brojac2 = 0
+                else:
+                    self.brojac2 += 1
 
-        if self.player1.pojeosilu == True:
-            self.player1.brojacZaSilu += 1
-            if self.player1.brojacZaSilu == 40:
-                self.player1.brojacZaSilu = 0
-                self.player1.pojeosilu = False
-            if self.usporenjeIgraca%2 == 0:
+            if self.player2.pom != 0:
+                if self.brojac3 == 500:
+                    self.brojac3 = 0
+                else:
+                    self.brojac3 += 1
+
+            if self.usporenjeIgraca%2== 0:
                 self.funcija11(self.player1)
-        else:
-            self.funcija11(self.player1)
-
-
-        if self.player2.pojeosilu == True:
-            self.player2.brojacZaSilu += 1
-            if self.player2.brojacZaSilu == 40:
-                self.player2.brojacZaSilu = 0
-                self.player2.pojeosilu = False
-            if self.usporenjeIgraca%2 == 0:
+            if self.usporenjeIgraca2%2 == 0: #brzina igraca
                 self.funcija11(self.player2)
-        else:
-            self.funcija11(self.player2)
 
-        if self.usporenjeIgraca == 100:
-            self.usporenjeIgraca += 1
+            if self.player1.pojeosilu == True:
+                if self.usporenjeIgraca != 100 and self.sila.option == 0: #trajanje usporenja
+                    self.usporenjeIgraca += 1
+                else:
+                    self.usporenjeIgraca = 0
+                    self.prikazanaSila = False
+                    self.brojacZaSilu = 0
+                    self.vrijemePrikazavanja = ran.randrange(7, 15)
+                    self.player1.pojeosilu = False
 
-        if self.brojac1%self.broj==0:
-            if self.tt <= 4:
-                self.PokrenutiNaPocetku()
+            if self.player2.pojeosilu == True:
+                if self.usporenjeIgraca2 != 100 and self.sila.option == 0:
+                    self.usporenjeIgraca2 += 1
+                else:
+                    self.usporenjeIgraca2 = 0
+                    self.prikazanaSila = False
+                    self.brojacZaSilu = 0
+                    self.vrijemePrikazavanja = ran.randrange(7, 15)
+                    self.player2.pojeosilu = False
+
+        if self.radniBrojac%self.broj1 == 0:
+            if self.brojac1%self.broj==0:
+                if self.tt <= 40:
+                    self.PokrenutiNaPocetku()
+                else:
+                    self.tryMove1()  # niti
+
+        if self.radniBrojac%5 == 0:
+            if self.slika_pom == 1:
+                self.slika_pom = 0
             else:
-                self.tryMove1()  # niti
+                self.slika_pom = 1
 
-        if self.slika_pom == 1:
-            self.slika_pom = 0
-        else:
-            self.slika_pom = 1
+            self.checkGameOver( )
 
-        self.checkGameOver( )
-
-        if self.opcija == True:
-            if self.brojac1 != 200:
-                self.brojac1 = self.brojac1 + 1
-            else:
-                self.brojac1 = 0
-                self.opcija = False
-                #self.broj = self.broj - 5
+            if self.opcija == True:
+                if self.brojac1 != 200:
+                    self.brojac1 = self.brojac1 + 1
+                else:
+                    self.brojac1 = 0
+                    self.opcija = False
+                    #self.broj = self.broj - 5
 
 
-        self.brojacZaSilu+=1
-        if self.brojacZaSilu*50/1000 == self.vrijemePrikazavanja:
-            self.prikazanaSila = True
-            self.sila.forceFunction(self.dots,self)
+            self.brojacZaSilu +=1
 
-        if (self.brojacZaSilu*50/1000 - self.vrijemePrikazavanja) == self.vrijemeTrajanja:
-            self.prikazanaSila = False
-            self.vrijemePrikazavanja = ran.randrange(7, 15)
-            self.vrijemeTrajanja = ran.randrange(5, 10)
-            self.brojacZaSilu = 0
+            if self.brojacZaSilu*50/1000 == self.vrijemePrikazavanja:
+                self.prikazanaSila = True
+                self.sila.forceFunction(self.dots,self)
 
-        self.checkPoints()
-        self.update()
+            if (self.brojacZaSilu*50/1000 - self.vrijemePrikazavanja) == self.vrijemeTrajanja:
+                self.prikazanaSila = False
+                self.vrijemePrikazavanja = ran.randrange(7, 15)
+                self.vrijemeTrajanja = ran.randrange(5, 15)
+                self.brojacZaSilu = 0
+
+            self.radniBrojac = 0
+
+            self.checkPoints()
+            self.update()
+        self.radniBrojac += 1
         super(Board, self).timerEvent(event)
 
     def funcija11(self, player):
 
         t = QTransform()
         t1 = QTransform()
-
+        if self.slika_pom == 1:
+            self.slika_pom = 0
+        else:
+            self.slika_pom = 1
         if player.key != 0:
 
             if player.key == 1:
@@ -500,35 +513,60 @@ class Board(QFrame):
 
     def PokrenutiNaPocetku(self):
 
-        if self.tt == 0:
-            self.ghost1.x = self.ghost1.x + 1
-            self.ghost2.x = self.ghost2.x + 1
+        if self.tt < 10:
+            if self.tt == 0:
+                self.ghost1.x1 = 4.20
+                self.ghost1.way1 = 4
+                self.ghost2.x1 = 4.20
+                self.ghost2.way1 = 4
 
-        elif self.tt == 1:
-            self.ghost1.x = self.ghost1.x + 1
-            self.ghost2.y = self.ghost2.y - 1
-            self.ghost2.way = 1
+            g.move(self.tiles,self.ghost1,self.player1,self.player2,self.opcija)
+            g.move(self.tiles, self.ghost2, self.player1, self.player2, self.opcija)
 
-        elif self.tt == 2:
+        elif self.tt >= 10 and self.tt < 20:
+            if self.tt == 10:
+                self.ghost1.x1 = 4.20
+                self.ghost1.way1 = 4
+                self.ghost2.y1 = -4.20
+                self.ghost2.way1 = 1
+            g.move(self.tiles, self.ghost1, self.player1, self.player2, self.opcija)
+            g.move(self.tiles, self.ghost2, self.player1, self.player2, self.opcija)
+
+        elif self.tt >= 20 and self.tt < 30:
+            if self.tt == 20:
+                self.ghost3.x1 = -4.20
+                self.ghost3.way1 = 3
+                self.ghost4.x1 = -4.20
+                self.ghost4.way1 = 3
+                self.ghost1.y1 = -4.20
+                self.ghost1.way1 = 1
+
             g.move(self.tiles, self.ghost2, self.player1,self.player2,self.opcija)
-            self.ghost1.y = self.ghost1.y - 1
-            self.ghost1.way = 1
-            self.ghost3.x = self.ghost3.x - 1
-            self.ghost3.way = 1
-            self.ghost4.x = self.ghost4.x - 1
-            self.ghost4.way = 1
+            g.move(self.tiles, self.ghost3, self.player1,self.player2,self.opcija)
+            g.move(self.tiles, self.ghost4, self.player1,self.player2,self.opcija)
+            g.move(self.tiles, self.ghost1, self.player1,self.player2,self.opcija)
 
-        elif self.tt == 3:
+
+        elif self.tt >= 30 and self.tt < 40:
+            if self.tt == 30:
+                self.ghost3.y1 = -4.20
+                self.ghost3.way1 = 1
+                self.ghost4.x1 = -4.20
+                self.ghost4.way1 = 3
+
             g.move(self.tiles,self.ghost1,self.player1,self.player2,self.opcija)
             g.move(self.tiles,self.ghost2,self.player1,self.player2,self.opcija)
-            self.ghost3.y = self.ghost3.y - 1
-            self.ghost4.x = self.ghost4.x - 1
+            g.move(self.tiles,self.ghost3,self.player1,self.player2,self.opcija)
+            g.move(self.tiles,self.ghost4,self.player1,self.player2,self.opcija)
 
-        elif self.tt == 4:
+        elif self.tt == 40:
+            self.ghost4.y1 = -4.20
+            self.ghost4.way1 = 1
+
             g.move(self.tiles, self.ghost1, self.player1, self.player2,self.opcija)
             g.move(self.tiles, self.ghost2, self.player1, self.player2,self.opcija)
             g.move(self.tiles, self.ghost3, self.player1, self.player2,self.opcija)
-            self.ghost4.y = self.ghost4.y - 1
+            g.move(self.tiles, self.ghost4, self.player1, self.player2,self.opcija)
 
         self.tt = self.tt + 1
         self.update()
@@ -537,16 +575,14 @@ class Board(QFrame):
 
         promijenjiva = False
 
-        zivot1 = 0
-        zivot2 = 0
-        bodovi1 = 0
-        bodovi2 = 0
 
         if self.ghost1.sakriven == True and self.ghost2.sakriven == True and self.ghost3.sakriven == True and self.ghost4.sakriven == True:
             promijenjiva = True
 
-        if promijenjiva == True:
 
+        if promijenjiva == True:
+            if self.broj1 - 1 >= 1:
+                self.broj1 -= 1
             self.level = self.level + 1
             text3 = "Level: " + (str(self.level))
             self.label3.setText(text3)
@@ -560,6 +596,10 @@ class Board(QFrame):
             self.ghost2 = g.Ghost(9, 10)
             self.ghost3 = g.Ghost(11, 10)
             self.ghost4 = g.Ghost(12, 10)
+
+            self.ghost2.i = QImage('images/ghost1.png')
+            self.ghost3.i = QImage('images/ghost2.png')
+            self.ghost4.i = QImage('images/ghost3.png')
 
             zivot1 = self.player1.zivot
             zivot2 = self.player2.zivot
@@ -577,8 +617,7 @@ class Board(QFrame):
             self.player2.i = self.player2.i3
 
             self.opcija = False  #bonuuus
-            if self.broj - 2 > 0:
-                self.broj = self.broj - 2
+
             self.brojac = 0
-            self.brojac1 = 1
+            self.brojac1 = 0
 
