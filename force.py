@@ -25,7 +25,7 @@ class Force(QGraphicsItem):
 
     def paint(self, painter):
 
-        target = QRectF(self.x * 42 + 10, self.y * 42 + 10, 25, 25)
+        target = QRectF(self.x * 42 + 1, self.y * 42 + 1, 41, 41)
         source = QRectF(0, 0, 42, 42)
 
         if self.x != 0 and self.y != 0:

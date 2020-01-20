@@ -121,7 +121,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
                     player.y1 = 0
                     player.y += 1
                     player.way1 = 0
-
+                    checkout(player, board, tiles, 3);
 
             else:
                 player.y1 = round(player.y1 - 4.20,2)
@@ -129,6 +129,7 @@ def movePlayer(kljuc, player, dots, tiles, board):
                     player.y1 = 0
                     player.y -= 1
                     player.way1 = 0
+                    checkout(player, board, tiles, 4);
         p = multiprocessing.Process(target=checkPosition(player, board))
     else:
         player.x = 8
