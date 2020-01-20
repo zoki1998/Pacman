@@ -22,7 +22,6 @@ class Window(QMainWindow):
 
         self.startGame()
         self.tboard = Board(self)
-
         self.initUI( )
 
     def initUI(self):
@@ -30,29 +29,23 @@ class Window(QMainWindow):
         self.setWindowTitle('Pacman-press esc to exit')
         self.setCentralWidget(self.tboard)
         self.setWindowIcon(QtGui.QIcon('pacman.ico'))
-
         self.resize(882, 964)
-
         self.tboard.timer.start(self.tboard.timer_interval, self.tboard)
-
         self.center()
         self.show()
 
     def startGame(self):
-        msgBox = QMessageBox()
 
+        msgBox = QMessageBox()
         msgBox.setWindowIcon(QtGui.QIcon('pacman.ico'))
         msgBox.setWindowTitle("Pacman")
-
         msgBox.setText('PACMAN \nStart game')
-
         msgBox.setStandardButtons(QMessageBox.Yes)
-
         msgBox.exec()
 
     def center(self):
-        """centers the window on the screen"""
 
+        """centers the window on the screen"""
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
         self.move((screen.width() - size.width()) / 2,
@@ -68,25 +61,20 @@ class Board(QFrame):
 
         self.threads = []
         self.pobjednik = 0
-
         self.brojacZaSilu = 0
         self.usporenjeIgraca = 0
         self.usporenjeIgraca2 = 0
         self.prikazanaSila = False
         self.vrijemePrikazavanja = ran.randrange(7,15)
         self.vrijemeTrajanja = ran.randrange(5,15)
-
         self.sila = f.Force()
-
         self.player1 = p.Player()
         self.player1.id = 1
         self.player2 = p.Player(20,10)
         self.player2.id = 2
         self.player2.i = self.player2.i3
         self.opcija = False  #za bonus
-
         self.broj1 = 5
-
         self.ghost1 = g.Ghost(8,10)
         self.ghost2 = g.Ghost(9,10)
         self.ghost3 = g.Ghost(11,10)
@@ -99,9 +87,7 @@ class Board(QFrame):
         self.ghost3.i = QImage('images/ghost2.png')
         self.ghost4.i = QImage('images/ghost3.png')
         self.tt = 0
-
         self.level = 1
-
         self.broj = 10 #za timer
         self.pauza = False #p
         self.brojac1 = 0 #za uskoravanje duhova
@@ -405,7 +391,6 @@ class Board(QFrame):
                 self.parent().close()
 
 
-
     def keyPressEvent(self, event):
 
         key = event.key()
@@ -425,7 +410,6 @@ class Board(QFrame):
                 if self.player1.oldkey != 2:
                     self.player1.key = 2
 
-
         elif key == Qt.Key_Down:
             self.player1.pom=3
             self.brojac2 = 0
@@ -437,7 +421,6 @@ class Board(QFrame):
             self.brojac2 = 0
             if self.player1.oldkey != 4 and self.tiles[self.player1.x*22-1+self.player1.y] != 10:
                 self.player1.key = 4
-
 
         elif key == Qt.Key_A:
             self.player2.pom = 1
@@ -507,7 +490,6 @@ class Board(QFrame):
         thread3 = Thread(target=g.move, args=(self.tiles, self.ghost3, self.player1, self.player2,self.opcija,))
 
         self.threads = [thread, thread1, thread2, thread3]
-
         self.threadstarts()
         self.threadsjoins()
 
@@ -606,7 +588,6 @@ class Board(QFrame):
             bodovi1 = self.player1.poeni
             bodovi2 = self.player2.poeni
 
-
             self.player1 = p.Player()
             self.player1.id = 1
             self.player1.zivot = zivot1
@@ -625,4 +606,3 @@ class Board(QFrame):
 
             self.brojac = 0
             self.brojac1 = 0
-

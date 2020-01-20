@@ -37,9 +37,7 @@ class Force(QGraphicsItem):
     def forceFunction(self, dots, board):
 
         self.findAvaiblePlaces(dots)
-
         d = ran.randrange(0, 2)
-
         self.option = d
 
         if len(self.avaible) == 0:
@@ -48,5 +46,3 @@ class Force(QGraphicsItem):
         else:
             k = ran.randrange(0,len(self.avaible))
             self.x,self.y = self.avaible[k]
-
-

@@ -14,7 +14,6 @@ class Player(QGraphicsItem):
         self.pom=0
 
         self.pocetak = 0
-
         self.game_over = False
         self.brojacZaSilu = 0
         self.colour = colour

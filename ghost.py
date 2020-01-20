@@ -154,13 +154,11 @@ def move(tiles, ghost, player, player1, opcija):
         ghost.y = 10
 
 
-
 def checkPosition(player, player1, opcija, ghost):
 
     if opcija == False:
         if ghost.x * 42 + ghost.x1 == player.x * 42 + player.x1 and ghost.y * 42 + ghost.y1 == player.y * 42 + player.y1:
             pl.zivot(player)
-            print('ziivoottt')
         if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             pl.zivot(player1)
     elif opcija == True:
@@ -170,8 +168,3 @@ def checkPosition(player, player1, opcija, ghost):
         if ghost.x * 42 + ghost.x1 == player1.x * 42 + player1.x1 and ghost.y * 42 + ghost.y1 == player1.y * 42 + player1.y1:
             ghost.sakriven = True
             player1.poeni += 500
-
-
-
-
-
